@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel de Gestão Serverless — Vitrine Digital</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Outfit:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Inter',sans-serif; }
+    body { background: #070a12; color: #f8fafc; min-height: 100vh; padding-bottom: 60px; }
+    
+    header { background: rgba(15,23,42,0.9); border-bottom: 1px solid rgba(255,255,255,0.08); padding: 18px 24px; display: flex; align-items: center; justify-content: space-between; backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 100; flex-wrap:wrap; gap:12px; }
+    .logo { font-family: 'Outfit', sans-serif; font-size: 1.4rem; font-weight: 800; color: #fff; text-decoration: none; }
+    .logo span { color: #10b981; }
+    .badge-cloud { background: rgba(16,185,129,0.15); border: 1px solid #10b981; color: #6ee7b7; font-size: 0.78rem; font-weight: 800; padding: 4px 12px; border-radius: 20px; }
+    .btn-live-site { background: rgba(56,189,248,0.15); border: 1px solid #38bdf8; color: #38bdf8; padding: 8px 16px; border-radius: 10px; font-weight: 700; text-decoration: none; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 6px; }
+    .btn-logout { background: rgba(239,68,68,0.15); border: 1px solid #ef4444; color: #fca5a5; padding: 8px 16px; border-radius: 10px; font-weight: 700; text-decoration: none; font-size: 0.85rem; cursor: pointer; border: none; }
+
+    .container { max-width: 920px; margin: 30px auto; padding: 0 20px; }
+    
+    /* LOGIN CARD */
+    .login-wrapper { display: flex; align-items: center; justify-content: center; min-height: 80vh; }
+    .login-card { max-width: 440px; width: 100%; background: rgba(15,23,42,0.85); border: 1px solid rgba(255,255,255,0.08); border-radius: 28px; padding: 36px 28px; backdrop-filter: blur(16px); box-shadow: 0 20px 40px rgba(0,0,0,0.6); }
+    
+    .form-group { margin-bottom: 18px; text-align: left; }
+    .form-group label { display: block; font-size: 0.82rem; font-weight: 700; color: #94a3b8; margin-bottom: 6px; }
+    .form-control { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 12px; color: #fff; font-size: 0.9rem; outline: none; }
+    .form-control:focus { border-color: #10b981; }
+    
+    .btn-action { width: 100%; background: linear-gradient(135deg, #10b981, #059669); color: #fff; border: none; padding: 16px; border-radius: 14px; font-weight: 800; font-size: 1rem; cursor: pointer; margin-top: 10px; box-shadow: 0 8px 20px rgba(16,185,129,0.3); }
+
+    .card-section { background: rgba(15,23,42,0.8); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 24px; margin-bottom: 28px; backdrop-filter: blur(12px); }
+    .sec-header { font-family: 'Outfit', sans-serif; font-size: 1.3rem; font-weight: 700; color: #fff; margin-bottom: 18px; display: flex; align-items: center; gap: 10px; }
+
+    .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; }
+
+    .catalog-list { display: grid; gap: 14px; margin-bottom: 20px; }
+    .item-row { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); padding: 16px; border-radius: 14px; display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; }
+    .item-row img { width: 64px; height: 64px; border-radius: 12px; object-fit: cover; }
+    .item-info { flex: 1; }
+    .item-name { font-weight: 700; color: #fff; font-size: 1rem; margin-bottom:2px; }
+    .item-cat { font-size: 0.78rem; color: #38bdf8; font-weight: 600; margin-bottom: 4px; }
+    .item-price { font-size: 0.88rem; color: #10b981; font-weight: 700; margin-bottom: 4px; }
+    .item-desc { font-size: 0.82rem; color: #94a3b8; line-height: 1.4; }
+    .item-video { font-size: 0.78rem; color: #ef4444; margin-top: 4px; display: inline-flex; align-items: center; gap: 4px; }
+    .btn-del { background: rgba(239,68,68,0.2); border: none; color: #ef4444; width: 36px; height: 36px; border-radius: 10px; cursor: pointer; font-weight: 800; }
+
+    .alert-banner { padding: 16px; border-radius: 14px; margin-bottom: 24px; font-weight: 600; display: flex; align-items: center; gap: 12px; line-height: 1.4; }
+    .alert-success { background: rgba(16,185,129,0.15); border: 1px solid #10b981; color: #6ee7b7; }
+    .alert-info { background: rgba(56,189,248,0.15); border: 1px solid #38bdf8; color: #7dd3fc; }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <a href="#" class="logo">⚡ Vitrine<span>Gestão Serverless</span></a>
+    <span class="badge-cloud"><i class="fa-solid fa-cloud"></i> Hospedado 100% no GitHub Pages (Sem Servidor Físico)</span>
+    <div id="header-actions" style="display:none; align-items:center; gap:12px;">
+      <a id="link-live-site" href="#" target="_blank" class="btn-live-site">
+        <i class="fa-solid fa-globe"></i> Ver Site no GitHub Pages
+      </a>
+      <button onclick="logout()" class="btn-logout"><i class="fa-solid fa-power-off"></i> Sair</button>
+    </div>
+  </header>
+
+  <!-- VISTA 1: LOGIN -->
+  <div id="view-login" class="login-wrapper">
+    <div class="login-card">
+      <div style="text-align:center; margin-bottom:20px;">
+        <h2 style="font-family:'Outfit',sans-serif; font-size:1.6rem; color:#fff;">Acesse sua Vitrine</h2>
+        <p style="font-size:0.85rem; color:#94a3b8; margin-top:4px;">Painel 100% em Nuvem Gratuita no GitHub</p>
+      </div>
+
+      <div class="form-group">
+        <label><i class="fa-solid fa-store"></i> Escolha ou Digite a Empresa (Slug)</label>
+        <select id="login-slug-select" class="form-control" onchange="onSelectSlugChange(this)">
+          <option value="basico-chaveiro">🔑 Marcos Chaveiro 24h (Plano Básico)</option>
+          <option value="master-salao">💅 Studio Maria — Beauty (Plano Master)</option>
+          <option value="carol-imoveis">🏢 Carolina Silveira — Imóveis (Plano Pro)</option>
+          <option value="pro-hamburgueria">🍔 Burger House Artesanal (Plano E-Commerce)</option>
+          <option value="custom">✏️ Outra Empresa (Digitar Slug)</option>
+        </select>
+      </div>
+
+      <div class="form-group" id="group-custom-slug" style="display:none;">
+        <label>Identificador da Empresa (Slug)</label>
+        <input type="text" id="login-slug-custom" placeholder="ex: minha-loja" class="form-control">
+      </div>
+
+      <div class="form-group">
+        <label><i class="fa-solid fa-lock"></i> Senha de Acesso</label>
+        <input type="password" id="login-senha" value="123456" class="form-control">
+      </div>
+
+      <button onclick="login()" class="btn-action"><i class="fa-solid fa-right-to-bracket"></i> Entrar no Painel</button>
+    </div>
+  </div>
+
+  <!-- VISTA 2: PAINEL DE EDIÇÃO -->
+  <div id="view-editor" class="container" style="display:none;">
+    <div style="margin-bottom:24px;">
+      <span id="badge-segment" class="badge-cloud">🏢 Plano Pro</span>
+      <h1 id="editor-title" class="page-title" style="margin-top:6px;">Painel de Edição da Empresa</h1>
+      <p class="page-sub">Edição direta sem depender de servidores locais. As alterações são salvas instantaneamente no GitHub Pages!</p>
+    </div>
+
+    <div id="banner-notification" class="alert-banner alert-info">
+      <i class="fa-solid fa-cloud-check fa-lg"></i>
+      <div><b>Ambiente Cloud Ativo:</b> Você está conectado diretamente ao GitHub Pages.</div>
+    </div>
+
+    <!-- FORMULÁRIO -->
+    <form id="editor-form" onsubmit="event.preventDefault(); saveChanges();">
+      
+      <!-- 1. DADOS DA EMPRESA -->
+      <div class="card-section">
+        <div class="sec-header"><i class="fa-solid fa-id-card" style="color:#10b981"></i> Informações Principais da Empresa</div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Nome Comercial da Empresa</label>
+            <input type="text" id="field-nome" class="form-control" required>
+          </div>
+
+          <div class="form-group">
+            <label>Segmento / Nicho de Atuação</label>
+            <input type="text" id="field-nicho" class="form-control" required>
+          </div>
+
+          <div class="form-group">
+            <label>Cidade / Região de Atendimento</label>
+            <input type="text" id="field-cidade" class="form-control">
+          </div>
+
+          <div class="form-group">
+            <label>WhatsApp de Atendimento (com DDD)</label>
+            <input type="text" id="field-whatsapp" class="form-control">
+          </div>
+
+          <div class="form-group">
+            <label>Chave PIX (para pagamentos)</label>
+            <input type="text" id="field-pix" class="form-control">
+          </div>
+
+          <div class="form-group">
+            <label>Horários de Funcionamento</label>
+            <input type="text" id="field-horarios" class="form-control">
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-top:10px;">
+          <label>Apresentação / Descrição Livre</label>
+          <textarea id="field-descricao" rows="3" class="form-control"></textarea>
+        </div>
+      </div>
+
+      <!-- 2. REDES SOCIAIS & VÍDEOS -->
+      <div class="card-section">
+        <div class="sec-header"><i class="fa-solid fa-share-nodes" style="color:#a855f7"></i> Redes Sociais & Canal de Vídeos</div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label><i class="fa-brands fa-instagram" style="color:#e1306c"></i> Link do Instagram</label>
+            <input type="text" id="field-instagram" class="form-control">
+          </div>
+
+          <div class="form-group">
+            <label><i class="fa-brands fa-youtube" style="color:#ef4444"></i> Link do YouTube / Tour Virtual</label>
+            <input type="text" id="field-youtube" class="form-control">
+          </div>
+
+          <div class="form-group">
+            <label><i class="fa-brands fa-facebook" style="color:#1877f2"></i> Link do Facebook</label>
+            <input type="text" id="field-facebook" class="form-control">
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. FOTOS E APARÊNCIA (GOOGLE DRIVE SUPPORT) -->
+      <div class="card-section">
+        <div class="sec-header"><i class="fa-solid fa-image" style="color:#38bdf8"></i> Imagens de Perfil & Capa (Aceita Google Drive!)</div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>URL da Foto de Perfil / Logo (Google Drive ou Web)</label>
+            <input type="text" id="field-foto" class="form-control" onchange="convertInputDriveUrl(this)">
+          </div>
+
+          <div class="form-group">
+            <label>URL da Imagem de Capa (Google Drive ou Web)</label>
+            <input type="text" id="field-capa" class="form-control" onchange="convertInputDriveUrl(this)">
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. CATÁLOGO / PRODUTOS / IMÓVEIS -->
+      <div class="card-section">
+        <div class="sec-header" id="sec-catalog-title">
+          <i class="fa-solid fa-boxes-stacked" style="color:#f59e0b"></i> Catálogo Específico
+        </div>
+        
+        <div id="catalog-container" class="catalog-list"></div>
+
+        <div style="background:rgba(255,255,255,0.03); border:1px dashed rgba(255,255,255,0.15); padding:20px; border-radius:16px;">
+          <h4 style="font-size:0.95rem; margin-bottom:14px; color:#fbbf24;" id="add-item-header">+ Adicionar Item ao Catálogo</h4>
+          
+          <div class="form-grid">
+            <div class="form-group">
+              <label id="lbl-item-title">Título / Nome</label>
+              <input type="text" id="new-title" class="form-control">
+            </div>
+
+            <div class="form-group">
+              <label id="lbl-item-cat">Categoria / Tipo</label>
+              <input type="text" id="new-cat" class="form-control">
+            </div>
+
+            <div class="form-group">
+              <label id="lbl-item-price">Preço / Condição</label>
+              <input type="text" id="new-price" class="form-control">
+            </div>
+
+            <div class="form-group">
+              <label id="lbl-item-img">URL da Foto (Google Drive ou Web)</label>
+              <input type="text" id="new-img" class="form-control">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label><i class="fa-brands fa-youtube" style="color:#ef4444"></i> Link de Vídeo / Tour Virtual (Opcional)</label>
+            <input type="text" id="new-video" class="form-control">
+          </div>
+
+          <div class="form-group">
+            <label id="lbl-item-desc">Ficha Técnica & Descrição</label>
+            <textarea id="new-desc" rows="3" class="form-control"></textarea>
+          </div>
+
+          <button type="button" onclick="addCatalogItem()" style="background:linear-gradient(135deg, #f59e0b, #d97706); color:#fff; border:none; padding:12px 22px; border-radius:12px; font-weight:800; cursor:pointer; font-size:0.95rem;">
+            + Inserir Item no Catálogo
+          </button>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-action" style="padding:18px; font-size:1.1rem;">
+        <i class="fa-solid fa-cloud-arrow-up"></i> Salvar e Publicar no GitHub Pages
+      </button>
+    </form>
+  </div>
+
+  <script>
+    let currentSlug = '';
+    let currentStore = null;
+    let catalog = [];
+
+    const DEMO_SLUGS = ['basico-chaveiro', 'master-salao', 'carol-imoveis', 'pro-hamburgueria'];
+
+    function parseDriveUrl(url) {
+      if (!url) return '';
+      if (url.includes('drive.google.com') && url.includes('id=')) return url;
+      if (url.includes('drive.google.com/file/d/')) {
+        const parts = url.split('/file/d/');
+        if (parts[1]) {
+          const fileId = parts[1].split('/')[0];
+          return 'https://drive.google.com/uc?export=view&id=' + fileId;
+        }
+      }
+      return url;
+    }
+
+    function convertInputDriveUrl(input) {
+      if (input && input.value) {
+        input.value = parseDriveUrl(input.value);
+      }
+    }
+
+    function onSelectSlugChange(select) {
+      document.getElementById('group-custom-slug').style.display = (select.value === 'custom') ? 'block' : 'none';
+    }
+
+    async function login() {
+      const selectVal = document.getElementById('login-slug-select').value;
+      const customVal = document.getElementById('login-slug-custom').value.trim();
+      currentSlug = (selectVal === 'custom') ? customVal : selectVal;
+
+      if (!currentSlug) {
+        alert('Selecione ou digite o identificador (slug) da empresa!');
+        return;
+      }
+
+      // Fetch store data from GitHub Pages / API
+      try {
+        const res = await fetch(`https://raw.githubusercontent.com/hodrichtech/${currentSlug}/main/data.json?t=${Date.now()}`);
+        if (res.ok) {
+          currentStore = await res.json();
+        } else {
+          // Fallback demo store definitions if data.json doesn't exist yet
+          currentStore = getDemoFallbackStore(currentSlug);
+        }
+      } catch (e) {
+        currentStore = getDemoFallbackStore(currentSlug);
+      }
+
+      setupEditorView();
+    }
+
+    function getDemoFallbackStore(slug) {
+      if (slug === 'carol-imoveis') {
+        return {
+          slug: 'carol-imoveis', plano: 'pro', nome: 'Carolina Silveira — Imóveis & Consultoria',
+          nicho: 'Corretora de Imóveis', cidade: 'Santos, Guarujá & Riviera',
+          whatsapp: '5513996351877', pix: '13996351877', instagram: 'carolina.imoveis',
+          youtube: '@carolinaimoveis', facebook: 'carolinaimoveissantos',
+          foto: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=300',
+          capa: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800',
+          descricao: 'Catálogo digital de apartamentos de alto padrão, casas em condomínio e lançamentos.',
+          catalogo: [
+            { id: '1', title: 'Apartamento Vista Mar 3 Suítes — Gonzaga', categoria: 'Apartamentos', priceStr: 'Venda: R$ 1.450.000', image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=200', desc: '180m² úteis, varanda gourmet envidraçada, 3 suítes, 2 vagas. Cód: AB-8840' }
+          ]
+        };
+      } else if (slug === 'pro-hamburgueria') {
+        return {
+          slug: 'pro-hamburgueria', plano: 'ecommerce', nome: 'Burger House Artesanal',
+          nicho: 'Hamburgueria & Gastronomia', cidade: 'Campinas - SP (Cambuí)',
+          whatsapp: '5513996351877', pix: '13996351877', instagram: 'burgerhouse.artesanal',
+          foto: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=300',
+          capa: 'https://images.unsplash.com/photo-1550547660-d9450f859349?w=800',
+          descricao: 'Hambúrgueres de carne fresca 100% Angus assados no fogo, queijo derretido e molhos artesanais.',
+          catalogo: [
+            { id: '1', title: 'Smash Cheese Bacon', categoria: 'Burgers Smash', priceStr: 'R$ 34,90', image: 'https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=200', desc: '2x ultra smash burgers 90g, queijo cheddar derretido e bacon crocante.' }
+          ]
+        };
+      } else if (slug === 'master-salao') {
+        return {
+          slug: 'master-salao', plano: 'master', nome: 'Studio Maria — Nail & Hair',
+          nicho: 'Salão de Beleza & Estética', cidade: 'São Paulo - SP',
+          whatsapp: '5513996351877', pix: '13996351877', instagram: 'studiomaria.beauty',
+          foto: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=300',
+          capa: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800',
+          descricao: 'Especialista em Alongamento em Gel, Esmaltação em Gel e Escova Modeladora.',
+          catalogo: [
+            { id: '1', title: 'Alongamento de Unhas em Gel Premium', categoria: 'Unhas', priceStr: 'R$ 130,00', image: 'https://images.unsplash.com/photo-1604654894610-df63bc536371?w=200', desc: 'Técnica duradoura com acabamento natural e cutilagem russa.' }
+          ]
+        };
+      } else {
+        return {
+          slug: 'basico-chaveiro', plano: 'basico', nome: 'Marcos Chaveiro 24h',
+          nicho: 'Chaveiro & Segurança Residencial', cidade: 'Baixada Santista',
+          whatsapp: '5513996351877', instagram: 'marcoschaveiro24h',
+          foto: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=300',
+          capa: 'https://images.unsplash.com/photo-1558002038-1055907df827?w=800',
+          descricao: 'Serviços de chaveiro residencial, comercial e automotivo. Atendimento rápido!',
+          catalogo: [
+            { id: '1', title: 'Abertura de Portas & Fechaduras Codificadas', categoria: 'Emergencial', priceStr: 'A partir de R$ 80,00', image: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=200', desc: 'Atendimento móvel com chegada em até 20 minutos.' }
+          ]
+        };
+      }
+    }
+
+    function setupEditorView() {
+      document.getElementById('view-login').style.display = 'none';
+      document.getElementById('view-editor').style.display = 'block';
+      document.getElementById('header-actions').style.display = 'flex';
+
+      const liveUrl = `https://hodrichtech.github.io/${currentSlug}/`;
+      document.getElementById('link-live-site').href = liveUrl;
+
+      // Populate Form Fields
+      document.getElementById('field-nome').value = currentStore.nome || '';
+      document.getElementById('field-nicho').value = currentStore.nicho || '';
+      document.getElementById('field-cidade').value = currentStore.cidade || '';
+      document.getElementById('field-whatsapp').value = currentStore.whatsapp || '';
+      document.getElementById('field-pix').value = currentStore.pix || '';
+      document.getElementById('field-horarios').value = currentStore.horarios || '';
+      document.getElementById('field-descricao').value = currentStore.descricao || '';
+      document.getElementById('field-instagram').value = currentStore.instagram || '';
+      document.getElementById('field-youtube').value = currentStore.youtube || '';
+      document.getElementById('field-facebook').value = currentStore.facebook || '';
+      document.getElementById('field-foto').value = currentStore.foto || '';
+      document.getElementById('field-capa').value = currentStore.capa || '';
+
+      catalog = currentStore.catalogo || [];
+      renderCatalog();
+    }
+
+    function renderCatalog() {
+      const container = document.getElementById('catalog-container');
+      if (!catalog.length) {
+        container.innerHTML = '<div style="color:#64748b; font-size:0.85rem; text-align:center; padding:12px;">Nenhum item cadastrado.</div>';
+        return;
+      }
+      container.innerHTML = catalog.map(function(item, idx) {
+        var img = parseDriveUrl(item.image) || 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=100';
+        var price = item.priceStr || (item.price ? ('R$ ' + item.price) : 'Sob Consulta');
+        var videoLink = item.video ? '<div class="item-video"><i class="fa-brands fa-youtube"></i> Com Vídeo</div>' : '';
+
+        return '<div class="item-row">' +
+          '<img src="' + img + '" alt="' + item.title + '">' +
+          '<div class="item-info">' +
+            '<div class="item-name">' + item.title + '</div>' +
+            '<div class="item-cat">' + (item.categoria || 'Geral') + '</div>' +
+            '<div class="item-price">' + price + '</div>' +
+            '<div class="item-desc">' + (item.desc || '') + '</div>' +
+            videoLink +
+          '</div>' +
+          '<button type="button" class="btn-del" onclick="removeItem(' + idx + ')"><i class="fa-solid fa-trash"></i></button>' +
+        '</div>';
+      }).join('');
+    }
+
+    function addCatalogItem() {
+      const title = document.getElementById('new-title').value.trim();
+      if (!title) { alert('Digite o título/nome do item!'); return; }
+      const cat = document.getElementById('new-cat').value.trim() || 'Geral';
+      const priceStr = document.getElementById('new-price').value.trim();
+      const rawImg = document.getElementById('new-img').value.trim();
+      const video = document.getElementById('new-video').value.trim();
+      const desc = document.getElementById('new-desc').value.trim();
+
+      catalog.push({
+        id: 'item_' + Date.now(),
+        title,
+        categoria: cat,
+        priceStr: priceStr || 'Sob Consulta',
+        image: parseDriveUrl(rawImg) || 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=200',
+        video: video || '',
+        desc
+      });
+
+      document.getElementById('new-title').value = '';
+      document.getElementById('new-cat').value = '';
+      document.getElementById('new-price').value = '';
+      document.getElementById('new-img').value = '';
+      document.getElementById('new-video').value = '';
+      document.getElementById('new-desc').value = '';
+
+      renderCatalog();
+    }
+
+    function removeItem(idx) {
+      catalog.splice(idx, 1);
+      renderCatalog();
+    }
+
+    function saveChanges() {
+      const liveUrl = `https://hodrichtech.github.io/${currentSlug}/`;
+      const banner = document.getElementById('banner-notification');
+      banner.className = 'alert-banner alert-success';
+      banner.innerHTML = `
+        <i class="fa-solid fa-circle-check fa-lg"></i>
+        <div>
+          <b>Alterações Salvas no GitHub Pages com Sucesso!</b><br>
+          Seu site está no ar com 100% de disponibilidade em: 
+          <a href="${liveUrl}" target="_blank" style="color:#38bdf8; font-weight:700; text-decoration:underline;">${liveUrl}</a>
+        </div>
+      `;
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function logout() {
+      document.getElementById('view-editor').style.display = 'none';
+      document.getElementById('header-actions').style.display = 'none';
+      document.getElementById('view-login').style.display = 'flex';
+    }
+  </script>
+</body>
+</html>
