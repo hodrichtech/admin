@@ -849,13 +849,23 @@ function setThemeColor(hex) {
         else if (typeof clientRenderEcommerce === 'function' && plano === 'ecommerce') html = clientRenderEcommerce(data);
         else if (typeof clientRenderPro === 'function' && plano === 'pro') html = clientRenderPro(data);
         else if (typeof clientRenderBasico === 'function') html = clientRenderBasico(data);
-        
+
         var iframe = document.getElementById('iframe-live-preview') || document.getElementById('previewFrame') || document.getElementById('previewIframe');
-        if (iframe && iframe.contentDocument) {
-          iframe.contentDocument.open();
-          iframe.contentDocument.write(html);
-          iframe.contentDocument.close();
+        if (iframe) {
+          if (iframe.hasAttribute('src')) {
+            iframe.removeAttribute('src');
+          }
+          var doc = iframe.contentDocument || (iframe.contentWindow ? iframe.contentWindow.document : null);
+          if (doc) {
+            doc.open();
+            doc.write(html);
+            doc.close();
+          }
         }
+      } catch (err) {
+        console.warn('Live preview update warning:', err.message);
+      }
+    }
       } catch (err) {
         console.warn('Live preview update warning:', err.message);
       }
