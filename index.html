@@ -249,16 +249,16 @@
               <i class="fa-solid fa-plus-circle"></i> <span id="add-item-title">Adicionar Item ao Catálogo</span>
             </h4>
 
-            <!-- TIPO: Serviço vs Produto (aparece apenas para segmentos que têm os dois) -->
-            <div class="form-group" id="group-tipo-item">
-              <label id="label-tipo-item">Tipo de Item</label>
-              <select id="new-tipo" class="form-control" onchange="onTipoChange(this.value)">
-                <option value="servico">💇 Serviço / Atendimento</option>
-                <option value="produto">📦 Produto com Estoque</option>
-              </select>
-            </div>
-
             <div class="form-grid">
+              <!-- TIPO DE ITEM -->
+              <div class="form-group" id="group-tipo-item">
+                <label id="label-tipo-item" style="font-weight:700; color:#fbbf24;"><i class="fa-solid fa-layer-group"></i> Tipo do Item</label>
+                <select id="new-tipo" class="form-control" onchange="onTipoChange(this.value)" style="border-color:rgba(245,158,11,0.5);">
+                  <option value="servico">💇 Serviço (Sem controle de estoque)</option>
+                  <option value="produto">📦 Produto com Estoque (Com controle de estoque)</option>
+                </select>
+              </div>
+
               <div class="form-group">
                 <label id="label-new-title">Nome do Serviço / Produto</label>
                 <input type="text" id="new-title" placeholder="ex: Corte Feminino, Kit Shampoo..." class="form-control">
@@ -274,17 +274,17 @@
                 <input type="text" id="new-price" placeholder="ex: R$ 80,00 ou Sob Consulta" class="form-control">
               </div>
 
+              <!-- QUANTIDADE EM ESTOQUE (Aparece em destaque quando selecionado Produto) -->
+              <div class="form-group" id="group-estoque" style="display:none; background:rgba(245,158,11,0.12); border:2px solid #f59e0b; border-radius:12px; padding:12px;">
+                <label style="color:#fbbf24; font-weight:800; font-size:0.85rem;"><i class="fa-solid fa-boxes-stacked"></i> Quantidade em Estoque (Unidades)</label>
+                <input type="number" id="new-estoque" value="10" min="0" class="form-control" style="border-color:#f59e0b; font-weight:800; font-size:1.05rem; background:#0f172a; color:#fbbf24; margin-top:4px;">
+                <div style="font-size:0.75rem; color:#fcd34d; margin-top:4px;"><i class="fa-solid fa-circle-info"></i> Informe quantas unidades físicas estão disponíveis</div>
+              </div>
+
               <div class="form-group">
                 <label>URL da Foto (Google Drive ou Web)</label>
                 <input type="text" id="new-img" placeholder="ex: Cole o link da foto" class="form-control">
               </div>
-            </div>
-
-            <!-- ESTOQUE: só aparece quando tipo = produto -->
-            <div class="form-group" id="group-estoque" style="display:none; background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.3); border-radius:12px; padding:14px;">
-              <label style="color:#fbbf24; font-weight:800;"><i class="fa-solid fa-boxes-stacked"></i> Quantidade em Estoque</label>
-              <input type="number" id="new-estoque" value="10" min="0" class="form-control" style="border-color:#f59e0b; max-width:180px;">
-              <div style="font-size:0.75rem; color:#92400e; margin-top:6px;"><i class="fa-solid fa-circle-info"></i> Quantidade atual disponível para venda</div>
             </div>
 
             <div class="form-group">
@@ -362,7 +362,12 @@
           foto: 'https://images.unsplash.com/photo-1584438784894-089d6a62b8fa?w=300',
           capa: 'https://images.unsplash.com/photo-1558002038-1055907df827?w=800',
           descricao: 'Abertura de portas residenciais e veiculares, confecção de chaves codificadas e troca de segredo de fechaduras. Atendimento rápido!',
-          catalogo: []
+          catalogo: [
+            { id: 'item_ch_1', title: 'Cópia de Chave Yale / Tetra Multi-Ponto', tipo: 'servico', categoria: 'Chaves & Cópias', priceStr: 'R$ 15,00', image: 'https://images.unsplash.com/photo-1582139329536-e7284fece509?w=400', desc: 'Cópia rápida de alta precisão feita na hora em liga de latão virgem.' },
+            { id: 'item_ch_2', title: 'Abertura Residencial & Automotiva 24h', tipo: 'servico', categoria: 'Emergência 24h', priceStr: 'R$ 120,00', image: 'https://images.unsplash.com/photo-1558002038-1055907df827?w=400', desc: 'Atendimento rápido sem danificar a fechadura ou lataria do veículo.' },
+            { id: 'item_ch_3', title: 'Cadeado Pado 45mm Latão Maciço Padrão Haste Alta', tipo: 'produto', estoque: 25, categoria: 'Cadeados & Travas', priceStr: 'R$ 48,00', image: 'https://images.unsplash.com/photo-1541888946425-d0fbb186a5b7?w=400', desc: 'Cadeado em latão maciço com 2 chaves com segredo computadorizado.' },
+            { id: 'item_ch_4', title: 'Fechadura Digital Biométrica Touchscreen com Tag Card', tipo: 'produto', estoque: 12, categoria: 'Fechaduras Digitais', priceStr: 'R$ 380,00', image: 'https://images.unsplash.com/photo-1558002038-1055907df827?w=400', desc: 'Acesso por biometria, senha numérica e cartão RFID. Instalação facilitada.' }
+          ]
         },
         'basico-guincho': {
           slug: 'basico-guincho', plano: 'basico', nome: 'Guincho & Socorro 24h (Demonstrativo)',
@@ -372,7 +377,12 @@
           foto: 'https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=300',
           capa: 'https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=800',
           descricao: 'Atendimento emergencial de guincho plataforma para carros, motos e utilitários. Carga rápida de bateria no local.',
-          catalogo: []
+          catalogo: [
+            { id: 'item_gu_1', title: 'Reboque / Guincho Plataforma 24h (Até 20km)', tipo: 'servico', categoria: 'Socorro 24h', priceStr: 'R$ 180,00', image: 'https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=400', desc: 'Remoção segura de passeio, SUV e utilitários leve em plataforma hidráulica.' },
+            { id: 'item_gu_2', title: 'Carga de Bateria / Auxílio Pane Elétrica no Local', tipo: 'servico', categoria: 'Socorro 24h', priceStr: 'R$ 90,00', image: 'https://images.unsplash.com/photo-1486006920555-c77dce18193b?w=400', desc: 'Atendimento rápido para partida auxiliar (chupeta) ou teste de alternador.' },
+            { id: 'item_gu_3', title: 'Bateria Automotiva Moura 60Ah Selada (Garantia 24 Meses)', tipo: 'produto', estoque: 15, categoria: 'Baterias', priceStr: 'R$ 420,00', image: 'https://images.unsplash.com/photo-1599256621730-535171e28e50?w=400', desc: 'Bateria original com entrega e teste do sistema elétrico inclusos.' },
+            { id: 'item_gu_4', title: 'Cabo de Partida Auxiliar 500A Reforçado 3 Metros', tipo: 'produto', estoque: 30, categoria: 'Acessórios Auto', priceStr: 'R$ 85,00', image: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=400', desc: 'Cabo elétrico de cobre emborrachado com garras jacaré isoladas de segurança.' }
+          ]
         },
         'master-salao': {
           slug: 'master-salao', plano: 'master', nome: 'Studio Beauty & Hair (Demonstrativo)',
@@ -383,7 +393,10 @@
           capa: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800',
           descricao: 'Especialista em Alongamento em Gel, Esmaltação em Gel, Escova Modeladora e Maquiagem Social.',
           catalogo: [
-            { id: '1', title: 'Alongamento de Unhas em Gel Premium', categoria: 'Unhas', priceStr: 'R$ 130,00', image: 'https://images.unsplash.com/photo-1604654894610-df63bc536371?w=200', desc: 'Técnica duradoura com acabamento natural e cutilagem russa.' }
+            { id: 'item_sa_1', title: 'Corte Feminino + Escova Modeladora', tipo: 'servico', categoria: 'Cabelo', priceStr: 'R$ 120,00', image: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=400', desc: 'Análise visagista, lavagem terapêutica, corte personalizado e escova.' },
+            { id: 'item_sa_2', title: 'Manicure + Esmaltação em Gel Duradoura', tipo: 'servico', categoria: 'Unhas', priceStr: 'R$ 65,00', image: 'https://images.unsplash.com/photo-1604654894610-df63bc536371?w=400', desc: 'Cutilagem funda higiênica, hidratação das mãos e esmaltação gel.' },
+            { id: 'item_sa_3', title: 'Kit Shampoo & Condicionador L'Oréal Absolut Repair 300ml', tipo: 'produto', estoque: 20, categoria: 'Cosméticos', priceStr: 'R$ 189,00', image: 'https://images.unsplash.com/photo-1535585209827-a15fcdbc4c2d?w=400', desc: 'Tratamento reconstrutor profissional para cabelos danificados.' },
+            { id: 'item_sa_4', title: 'Óleo Reparador Kérastase Elixir Ultime 100ml', tipo: 'produto', estoque: 15, categoria: 'Cosméticos', priceStr: 'R$ 240,00', image: 'https://images.unsplash.com/photo-1608248597261-8332446797b5?w=400', desc: 'Óleo de nutrição profunda e brilho sublime com proteção térmica.' }
           ]
         },
         'master-mecanica': {
@@ -395,7 +408,10 @@
           capa: 'https://images.unsplash.com/photo-1617814076367-b759c7d7e738?w=800',
           descricao: 'Injeção eletrônica, revisão preventiva, alinhamento 3D, freios e suspensão com transparência.',
           catalogo: [
-            { id: '1', title: 'Revisão Preventiva Geral (40 Itens)', categoria: 'Serviços', priceStr: 'R$ 250,00', image: 'https://images.unsplash.com/photo-1486006920555-c77dce18193b?w=200', desc: 'Check-up completo computadorizado de injeção e suspensão.' }
+            { id: 'item_me_1', title: 'Revisão Preventiva Geral (40 Itens de Segurança)', tipo: 'servico', categoria: 'Serviços', priceStr: 'R$ 250,00', image: 'https://images.unsplash.com/photo-1486006920555-c77dce18193b?w=400', desc: 'Checagem de suspensão, freios, injeção eletrônica e fluidos.' },
+            { id: 'item_me_2', title: 'Alinhamento 3D + Balanceamento 4 Rodas', tipo: 'servico', categoria: 'Serviços', priceStr: 'R$ 140,00', image: 'https://images.unsplash.com/photo-1517524008697-84bbe3c3fd98?w=400', desc: 'Ajuste milimétrico computadorizado.' },
+            { id: 'item_me_3', title: 'Óleo Lubrificante Shell Helix 5W30 1L', tipo: 'produto', estoque: 50, categoria: 'Peças & Lubrificantes', priceStr: 'R$ 58,00', image: 'https://images.unsplash.com/photo-1599256621730-535171e28e50?w=400', desc: 'Óleo 100% sintético para máxima proteção.' },
+            { id: 'item_me_4', title: 'Jogo de Pastilhas de Freio Dianteiras Bosch', tipo: 'produto', estoque: 18, categoria: 'Peças & Lubrificantes', priceStr: 'R$ 160,00', image: 'https://images.unsplash.com/photo-1600790142055-619df03207e6?w=400', desc: 'Pastilhas cerâmicas de alta eficiência de frenagem.' }
           ]
         },
         'master-marcenaria': {
@@ -405,9 +421,12 @@
           mapsUrl: 'https://www.google.com/maps?q=Curitiba+PR',
           foto: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=300',
           capa: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=800',
-          descricao: 'Projetos sob medida em MDF 100% naval para cozinhas, dormitórios, painéis de TV e escritórios corporativos.',
+          descricao: 'Projetos sob medida em MDF 100% naval para cozinhas, dormitórios, painéis de TV e escritórios.',
           catalogo: [
-            { id: '1', title: 'Cozinha Planejada Minimalista MDF', categoria: 'Cozinhas', priceStr: 'Sob Consulta', image: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=200', desc: 'Armários aéreos com amortecimento e balcão em ilha.' }
+            { id: 'item_ma_1', title: 'Projeto & Fabricação de Cozinha Planejada MDF', tipo: 'servico', categoria: 'Projetos', priceStr: 'Sob Consulta', image: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=400', desc: 'Projeto 3D completo com ferragens com amortecedor.' },
+            { id: 'item_ma_2', title: 'Painel para TV Ripado com Iluminação LED', tipo: 'servico', categoria: 'Projetos', priceStr: 'R$ 1.800,00', image: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=400', desc: 'Painel amadeirado com passa-cabos e fita LED quente.' },
+            { id: 'item_ma_3', title: 'Mesa de Canto Orgânica Madeira Nobre', tipo: 'produto', estoque: 5, categoria: 'Pronta Entrega', priceStr: 'R$ 650,00', image: 'https://images.unsplash.com/photo-1533090161767-e6ffed986c88?w=400', desc: 'Design exclusivo artesanal com pés palito.' },
+            { id: 'item_ma_4', title: 'Conjunto 3 Nichos Decorativos MDF', tipo: 'produto', estoque: 14, categoria: 'Pronta Entrega', priceStr: 'R$ 180,00', image: 'https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=400', desc: 'Nichos prontos para instalação.' }
           ]
         },
         'master-solarenergia': {
@@ -419,7 +438,10 @@
           capa: 'https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?w=800',
           descricao: 'Projetos de energia fotovoltaica para residências e comércios. Reduza até 95% da conta de luz.',
           catalogo: [
-            { id: '1', title: 'Sistema Fotovoltaico Residencial (300 kWh/mês)', categoria: 'Kits Fotovoltaicos', priceStr: 'Sob Orçamento', image: 'https://images.unsplash.com/photo-1509391365360-2e959784a276?w=200', desc: 'Kit completo com 6 painéis de alta eficiência e inversor homologado.' }
+            { id: 'item_so_1', title: 'Projeto, Homologação & Instalação Fotovoltaica', tipo: 'servico', categoria: 'Engenharia', priceStr: 'Sob Consulta', image: 'https://images.unsplash.com/photo-1508873696983-2df5057d225b?w=400', desc: 'Turnkey completo de engenharia e aprovação na concessionária.' },
+            { id: 'item_so_2', title: 'Limpeza Técnica de Painéis Solares', tipo: 'servico', categoria: 'Manutenção', priceStr: 'R$ 350,00', image: 'https://images.unsplash.com/photo-1509391365360-2e959784a276?w=400', desc: 'Lavagem desmineralizada para restaurar a eficiência da geração.' },
+            { id: 'item_so_3', title: 'Kit Fotovoltaico Residencial 4.4kWp (8 Painéis 550W + Inversor)', tipo: 'produto', estoque: 8, categoria: 'Kits Solar', priceStr: 'R$ 13.900,00', image: 'https://images.unsplash.com/photo-1509391365360-2e959784a276?w=400', desc: 'Gerador fotovoltaico para cerca de 500 kWh/mês.' },
+            { id: 'item_so_4', title: 'Inversor Solar On-Grid Growatt 5kW 220V Wi-Fi', tipo: 'produto', estoque: 10, categoria: 'Equipamentos', priceStr: 'R$ 4.200,00', image: 'https://images.unsplash.com/photo-1508873696983-2df5057d225b?w=400', desc: 'Inversor inteligente com monitoramento no aplicativo.' }
           ]
         },
         'pro-imobiliaria': {
@@ -431,8 +453,10 @@
           capa: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800',
           descricao: 'Catálogo demonstrativo de lançamentos de alto padrão e consultoria técnica especializada para investidores.',
           catalogo: [
-            { id: '1', title: 'Esplêndido Apartamento de Alto Padrão (Ref: PRO-101)', categoria: 'Apartamentos', priceStr: 'Venda: R$ 2.450.000', image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=200', desc: 'Residência suspensa de 220m² de área privativa, automatizada, 4 suítes, varanda gourmet panorâmica e 3 vagas.' },
-            { id: '2', title: 'Mansão Contemporânea em Condomínio Fechado (Ref: PRO-102)', categoria: 'Casas em Condomínio', priceStr: 'Venda: R$ 5.900.000', image: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=200', desc: 'Projeto neoclássico de 580m² com 5 suítes máster, piscina com borda infinita e adega.' }
+            { id: 'item_im_1', title: 'Avaliação Mercadológica & Perícia Imobiliária', tipo: 'servico', categoria: 'Consultoria', priceStr: 'R$ 500,00', image: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=400', desc: 'Laudo de avaliação comercial fundamentado.' },
+            { id: 'item_im_2', title: 'Apartamento Alto Padrão 3 Suítes 140m² Centro (Ref: PRO-101)', tipo: 'produto', estoque: 1, categoria: 'Venda', priceStr: 'Venda: R$ 890.000', image: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=400', desc: 'Varanda gourmet, 2 vagas cobertas, lazer completo.' },
+            { id: 'item_im_3', title: 'Mansão em Condomínio Fechado 280m² (Ref: PRO-102)', tipo: 'produto', estoque: 1, categoria: 'Venda', priceStr: 'Venda: R$ 1.650.000', image: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=400', desc: '4 suítes, pé direito duplo, piscina privativa.' },
+            { id: 'item_im_4', title: 'Sobrado Residencial 3 Qts com Espaço Gourmet (Ref: PRO-104)', tipo: 'produto', estoque: 1, categoria: 'Locação', priceStr: 'Aluguel: R$ 3.200/mês', image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400', desc: 'Sobrado seminovo com móveis planejados.' }
           ]
         },
         'pro-clinica': {
@@ -444,7 +468,10 @@
           capa: 'https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?w=800',
           descricao: 'Facetas em resina compostas, alinhadores invisíveis, clareamento a laser e harmonização orofacial.',
           catalogo: [
-            { id: '1', title: 'Lentes de Contato Dental / Facetas em Resina', categoria: 'Estética Dental', priceStr: 'Sob Avaliação', image: 'https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=200', desc: 'Transformação do sorriso em sessão única com escaneamento intraoral 3D.' }
+            { id: 'item_cl_1', title: 'Clareamento Dental a Laser + Kit Caseiro', tipo: 'servico', categoria: 'Odontologia', priceStr: 'R$ 680,00', image: 'https://images.unsplash.com/photo-1606811841689-23dfddce3e95?w=400', desc: 'Sessão em consultório com moldeira de retoque.' },
+            { id: 'item_cl_2', title: 'Harmonização Facial / Preenchimento Labial 1ml', tipo: 'servico', categoria: 'Estética', priceStr: 'R$ 1.200,00', image: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=400', desc: 'Aplicação de ácido hialurônico para volume natural.' },
+            { id: 'item_cl_3', title: 'Kit Clareador Dental Caseiro Whiteness 22%', tipo: 'produto', estoque: 20, categoria: 'Produtos', priceStr: 'R$ 145,00', image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=400', desc: 'Gel clareador de uso sob supervisão.' },
+            { id: 'item_cl_4', title: 'Sérum Facial Hidratante Ácido Hialurônico 30ml', tipo: 'produto', estoque: 25, categoria: 'Produtos', priceStr: 'R$ 120,00', image: 'https://images.unsplash.com/photo-1608248597261-8332446797b5?w=400', desc: 'Regenerador cutâneo pós-procedimento.' }
           ]
         },
         'pro-petshop': {
@@ -456,7 +483,10 @@
           capa: 'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=800',
           descricao: 'Banho e tosa profissional com ozonioterapia, consultas veterinárias e táxi pet com busca residencial.',
           catalogo: [
-            { id: '1', title: 'Banho & Tosa Completo + Hidratação de Pelagem', categoria: 'Banho & Tosa', priceStr: 'R$ 90,00', image: 'https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?w=200', desc: 'Corte de unhas, limpeza de ouvidos e shampoo hipoalergênico.' }
+            { id: 'item_pe_1', title: 'Banho & Tosa Completo + Hidratação', tipo: 'servico', categoria: 'Banho & Tosa', priceStr: 'R$ 75,00', image: 'https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?w=400', desc: 'Banho hipoalergênico, corte de unhas e limpeza de ouvidos.' },
+            { id: 'item_pe_2', title: 'Consulta Veterinária Preventiva + Vacina V10', tipo: 'servico', categoria: 'Veterinária', priceStr: 'R$ 160,00', image: 'https://images.unsplash.com/photo-1628009368231-7bb7cfcb0def?w=400', desc: 'Avaliação clínica completa pelo médico veterinário.' },
+            { id: 'item_pe_3', title: 'Ração Royal Canin Adulto Raças Pequenas 7.5kg', tipo: 'produto', estoque: 18, categoria: 'Rações', priceStr: 'R$ 198,00', image: 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?w=400', desc: 'Alimento super premium nutritivo.' },
+            { id: 'item_pe_4', title: 'Peitoral Ergoclick com Guia Conforto Cães M/G', tipo: 'produto', estoque: 30, categoria: 'Acessórios', priceStr: 'R$ 89,00', image: 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=400', desc: 'Peitoral anti-puxão ajustável com fitas refletivas.' }
           ]
         },
         'pro-hamburgueria': {
@@ -468,7 +498,10 @@
           capa: 'https://images.unsplash.com/photo-1550547660-d9450f859349?w=800',
           descricao: 'Hambúrgueres de carne fresca 100% Angus assados no fogo, queijo derretido e molhos artesanais.',
           catalogo: [
-            { id: '1', title: 'Smash Cheese Bacon', categoria: 'Burgers Smash', priceStr: 'R$ 34,90', image: 'https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=200', desc: '2x ultra smash burgers 90g, queijo cheddar derretido e bacon crocante.' }
+            { id: 'item_ha_1', title: 'Combo Smash Bacon Double + Batata + Refri', tipo: 'servico', categoria: 'Combos', priceStr: 'R$ 42,90', image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400', desc: '2x smashed burgers 90g, cheddar fatiado e bacon crocante.' },
+            { id: 'item_ha_2', title: 'Burger Artesanal Gorgonzola & Cebola Caramelizada', tipo: 'servico', categoria: 'Burgers', priceStr: 'R$ 36,00', image: 'https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=400', desc: 'Blend bovino 180g grelhado no fogo com gorgonzola.' },
+            { id: 'item_ha_3', title: 'Cerveja Artesanal IPA Colorado Indica 600ml', tipo: 'produto', estoque: 45, categoria: 'Bebidas', priceStr: 'R$ 18,90', image: 'https://images.unsplash.com/photo-1608270586620-248524c67de9?w=400', desc: 'Cerveja artesanal trincando de gelada.' },
+            { id: 'item_ha_4', title: 'Mini Churros Recheados Doce de Leite (8 un)', tipo: 'produto', estoque: 30, categoria: 'Sobremesas', priceStr: 'R$ 22,00', image: 'https://images.unsplash.com/photo-1624353365286-3f8d62daad51?w=400', desc: 'Mini churros crocantes recheados com doce de leite.' }
           ]
         }
       };
@@ -627,18 +660,17 @@
 
     // ─── CONFIG POR SEGMENTO ────────────────────────────────────────────────────
     var SEGMENT_CONFIG = {
-      // slug → { hasTipo, onlyServicos, onlyProdutos, labels }
-      'master-salao':       { hasTipo: true,  labels: { servico: '💇 Serviço (ex: Corte, Escova, Manicure)', produto: '📦 Produto com Estoque (ex: Shampoo, Creme)', title: 'Nome do Serviço ou Produto', cat: 'Categoria (ex: Cabelo, Unhas, Produto)' } },
-      'master-mecanica':    { hasTipo: true,  labels: { servico: '🔧 Serviço (ex: Revisão, Alinhamento)', produto: '📦 Peça / Item com Estoque', title: 'Nome do Serviço ou Peça', cat: 'Categoria (ex: Serviço, Peça, Revisão)' } },
-      'master-marcenaria':  { hasTipo: false, onlyServicos: true, labels: { title: 'Nome do Projeto / Serviço', cat: 'Categoria (ex: Cozinha, Dormitório, Escritório)' } },
-      'master-solarenergia':{ hasTipo: false, onlyServicos: true, labels: { title: 'Nome do Kit / Serviço', cat: 'Categoria (ex: Kit Fotovoltaico, Instalação, Manutenção)' } },
-      'basico-chaveiro':    { hasTipo: false, onlyServicos: true, labels: { title: 'Nome do Serviço', cat: 'Categoria (ex: Residencial, Automotivo, Cofre)' } },
-      'basico-guincho':     { hasTipo: false, onlyServicos: true, labels: { title: 'Nome do Serviço', cat: 'Categoria (ex: Guincho, Carga de Bateria, Pane Seca)' } },
-      'pro-imobiliaria':    { hasTipo: false, onlyServicos: true, labels: { title: 'Nome / Ref. do Imóvel', cat: 'Tipo (ex: Apartamento, Casa, Comercial)', price: 'Valor (ex: Venda: R$ 2.450.000)' } },
-      'pro-clinica':        { hasTipo: false, onlyServicos: true, labels: { title: 'Nome do Procedimento / Serviço', cat: 'Especialidade (ex: Estética Dental, Harmonização)' } },
-      'pro-petshop':        { hasTipo: true,  labels: { servico: '🐾 Serviço (ex: Banho e Tosa, Consulta)', produto: '📦 Produto com Estoque (ex: Ração, Acessório)', title: 'Nome do Serviço ou Produto', cat: 'Categoria (ex: Banho, Ração, Acessório)' } },
-      'pro-hamburgueria':   { hasTipo: false, onlyServicos: true, labels: { title: 'Nome do Item do Cardápio', cat: 'Categoria (ex: Burger, Bebida, Sobremesa)', price: 'Preço (ex: R$ 34,90)' } }
-    };
+  'basico-chaveiro':    { hasTipo: true, labels: { servico: '🔑 Serviço (ex: Cópia de Chave, Abertura 24h, Troca de Segredo)', produto: '📦 Produto com Estoque (ex: Cadeado Pado, Fechadura Digital, Chave Canivete)', title: 'Nome do Serviço ou Produto', cat: 'Categoria (ex: Residencial, Automotivo, Fechaduras)', price: 'Preço (ex: R$ 70,00 ou R$ 220,00)' } },
+  'basico-guincho':     { hasTipo: true, labels: { servico: '🚨 Serviço (ex: Reboque 24h, Carga de Bateria, Troca de Pneu)', produto: '📦 Peça / Item com Estoque (ex: Bateria 60A, Cabo de Chupeta, Fluido de Freio)', title: 'Nome do Serviço ou Peça', cat: 'Categoria (ex: Socorro 24h, Baterias, Peças)', price: 'Preço (ex: R$ 150,00 ou R$ 380,00)' } },
+  'master-salao':       { hasTipo: true, labels: { servico: '💇 Serviço (ex: Corte Feminino, Escova Progressiva, Manicure)', produto: '📦 Produto com Estoque (ex: Kit Shampoo Loreal, Óleo Reparador, Máscara)', title: 'Nome do Serviço ou Produto', cat: 'Categoria (ex: Cabelo, Unhas, Cosméticos)', price: 'Preço (ex: R$ 80,00 ou R$ 140,00)' } },
+  'master-mecanica':    { hasTipo: true, labels: { servico: '🔧 Serviço (ex: Revisão Completa, Alinhamento, Troca de Óleo)', produto: '📦 Peça / Item com Estoque (ex: Óleo 5W30, Filtro de Ar, Pastilhas)', title: 'Nome do Serviço ou Peça', cat: 'Categoria (ex: Serviços, Peças, Lubrificantes)', price: 'Preço (ex: R$ 250,00 ou R$ 180,00)' } },
+  'master-marcenaria':  { hasTipo: true, labels: { servico: '🪵 Serviço (ex: Projeto de Cozinha Planejada, Reforma de Móveis)', produto: '📦 Item Pronta Entrega (ex: Mesa de Canto, Prateleira, Nicho MDF)', title: 'Nome do Serviço ou Produto', cat: 'Categoria (ex: Cozinha, Dormitório, Pronta Entrega)', price: 'Preço (ex: R$ 1.200,00 ou Sob Consulta)' } },
+  'master-solarenergia':{ hasTipo: true, labels: { servico: '🔧 Serviço (ex: Instalação de Sistema Fotovoltaico, Limpeza)', produto: '📦 Equipamento / Kit com Estoque (ex: Painel 550W, Inversor 5kW)', title: 'Nome do Serviço ou Equipamento', cat: 'Categoria (ex: Instalação, Kits Fotovoltaicos, Inversores)', price: 'Preço (ex: R$ 14.500,00 ou Sob Consulta)' } },
+  'pro-imobiliaria':    { hasTipo: true, labels: { servico: '🏢 Serviço / Consultoria (ex: Avaliação de Imóvel, Gestão)', produto: '🏠 Imóvel em Carteira (ex: Apê 3 Qts Centro, Casa em Condomínio)', title: 'Nome do Serviço ou Imóvel / Ref.', cat: 'Categoria (ex: Venda, Aluguel, Lançamento)', price: 'Preço (ex: Venda: R$ 850.000 ou R$ 2.800/mês)' } },
+  'pro-clinica':        { hasTipo: true, labels: { servico: '🩺 Procedimento (ex: Limpeza Dental, Clareamento a Laser)', produto: '📦 Produto de Cuidados (ex: Kit Clareador, Creme Pós-Procedimento)', title: 'Nome do Procedimento ou Produto', cat: 'Categoria (ex: Odontologia, Harmonização, Dermocosméticos)', price: 'Preço (ex: R$ 350,00 ou Sob Consulta)' } },
+  'pro-petshop':        { hasTipo: true, labels: { servico: '🐾 Serviço (ex: Banho & Tosa Completo, Consulta, Vacinação)', produto: '📦 Produto com Estoque (ex: Ração Premium 15kg, Peitoral Guia)', title: 'Nome do Serviço ou Produto', cat: 'Categoria (ex: Banho & Tosa, Ração, Acessórios)', price: 'Preço (ex: R$ 65,00 ou R$ 160,00)' } },
+  'pro-hamburgueria':   { hasTipo: true, labels: { servico: '🍔 Item do Cardápio (ex: Combo Bacon Smash + Batata, Burger)', produto: '📦 Produto em Estoque / Bebida (ex: Coca-Cola 2L, Cerveja IPA)', title: 'Nome do Item ou Bebida/Produto', cat: 'Categoria (ex: Burgers, Combos, Bebidas)', price: 'Preço (ex: R$ 34,90 ou R$ 12,00)' } }
+};
 
     function adaptCatalogFormToSegment(slug) {
       var cfg = SEGMENT_CONFIG[slug] || { hasTipo: true };
