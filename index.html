@@ -195,14 +195,14 @@
 
         <!-- 2. PERSONALIZAÇÃO VISUAL: LOGO & PALETA DE CORES -->
         <div class="card-section">
-          <div class="sec-header"><i class="fa-solid fa-palette" style="color:#f59e0b"></i> Personalização Visual: Logotipo & Paleta de Cores</div>
+                    <div class="sec-header"><i class="fa-solid fa-palette" style="color:#f59e0b"></i> Personalização Visual: Logotipo & Paleta de Cores</div>
           
           <div class="form-grid">
             <div class="form-group">
               <label>URL da Foto da Logomarca / Perfil (Google Drive ou Web)</label>
               <input type="text" id="field-foto" oninput="triggerLivePreview()" class="form-control" onchange="previewLogo(this.value)">
-              <div id="logo-preview-box" style="margin-top:10px; display:flex; align-items:center; gap:10px;">
-                <img id="img-logo-preview" src="" style="width:50px; height:50px; border-radius:12px; object-fit:cover; border:2px solid #f59e0b; display:none;">
+              <div id="logo-preview-box" style="margin-top:8px; display:flex; align-items:center; gap:10px;">
+                <img id="img-logo-preview" src="" style="width:48px; height:48px; border-radius:12px; object-fit:cover; border:2px solid #f59e0b; display:none;">
                 <span style="font-size:0.78rem; color:#94a3b8;">Pré-visualização do Logo</span>
               </div>
             </div>
@@ -212,26 +212,24 @@
               <input type="text" id="field-capa" oninput="triggerLivePreview()" class="form-control">
             </div>
 
-            <div class="form-group">
-              <label>Cor Destaque do Tema (Seletor Personalizado)</label>
-              <div style="display:flex; align-items:center; gap:10px;">
+            <div class="form-group" style="grid-column: 1 / -1;">
+              <label style="color:#f59e0b; font-weight:800; margin-bottom:8px; display:block;"><i class="fa-solid fa-palette"></i> Cor Destaque do Tema</label>
+              <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
                 <input type="color" id="field-corTema" value="#f59e0b" style="width:48px; height:44px; border:none; background:transparent; cursor:pointer;" onchange="setThemeColor(this.value)">
-                <input type="text" id="field-corTema-hex" value="#f59e0b" class="form-control" style="flex:1;" readonly>
+                <input type="text" id="field-corTema-hex" value="#f59e0b" class="form-control" style="width:120px; font-weight:800; font-family:monospace;" readonly>
               </div>
-              <div class="color-swatches">
-                <div class="swatch-btn active" style="background:#f59e0b;" title="Dourado / Âmbar" onclick="setThemeColor('#f59e0b')"></div>
-                <div class="swatch-btn" style="background:#10b981;" title="Verde Esmeralda" onclick="setThemeColor('#10b981')"></div>
-                <div class="swatch-btn" style="background:#38bdf8;" title="Azul Safira" onclick="setThemeColor('#38bdf8')"></div>
-                <div class="swatch-btn" style="background:#ef4444;" title="Vermelho Rubi" onclick="setThemeColor('#ef4444')"></div>
-                <div class="swatch-btn" style="background:#a855f7;" title="Roxo Ametista" onclick="setThemeColor('#a855f7')"></div>
-                <div class="swatch-btn" style="background:#ec4899;" title="Rosa Glamour" onclick="setThemeColor('#ec4899')"></div>
+
+              <div style="font-size:0.78rem; font-weight:800; color:#fbbf24; margin-bottom:6px;"><i class="fa-solid fa-wand-magic-sparkles"></i> Paletas de Cores Prontas (1-Clique)</div>
+              <div style="display:flex; flex-wrap:wrap; gap:8px;">
+                <button type="button" onclick="setThemeColor('#6366f1')" style="background:#1e293b; border:1px solid #6366f1; color:#fff; padding:6px 12px; border-radius:6px; font-size:0.75rem; font-weight:700; cursor:pointer;">🌌 Dark Neon (#6366f1)</button>
+                <button type="button" onclick="setThemeColor('#0284c7')" style="background:#1e293b; border:1px solid #0284c7; color:#fff; padding:6px 12px; border-radius:6px; font-size:0.75rem; font-weight:700; cursor:pointer;">🌿 Minimal Clean (#0284c7)</button>
+                <button type="button" onclick="setThemeColor('#f59e0b')" style="background:#1e293b; border:1px solid #f59e0b; color:#fff; padding:6px 12px; border-radius:6px; font-size:0.75rem; font-weight:700; cursor:pointer;">👑 Gold Luxury (#f59e0b)</button>
+                <button type="button" onclick="setThemeColor('#ea580c')" style="background:#1e293b; border:1px solid #ea580c; color:#fff; padding:6px 12px; border-radius:6px; font-size:0.75rem; font-weight:700; cursor:pointer;">🍊 Warm Delivery (#ea580c)</button>
+                <button type="button" onclick="setThemeColor('#0d9488')" style="background:#1e293b; border:1px solid #0d9488; color:#fff; padding:6px 12px; border-radius:6px; font-size:0.75rem; font-weight:700; cursor:pointer;">🩺 Clinical Clean (#0d9488)</button>
               </div>
             </div>
           </div>
-        </div>
 
-        <!-- 3. REDES SOCIAIS -->
-        <div class="card-section">
           <div class="sec-header"><i class="fa-solid fa-share-nodes" style="color:#a855f7"></i> Redes Sociais</div>
           <div class="form-grid">
             <div class="form-group">
