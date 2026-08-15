@@ -827,15 +827,21 @@ function setThemeColor(hex) {
         nicho: (document.getElementById('field-nicho')||{value:''}).value || currentStore.nicho || '',
         cidade: (document.getElementById('field-cidade')||{value:''}).value || currentStore.cidade || '',
         whatsapp: (document.getElementById('field-whatsapp')||{value:''}).value || currentStore.whatsapp || '',
-        instagram: (document.getElementById('field-instagram')||{value:''}).value || currentStore.instagram || '',
-        youtube: (document.getElementById('field-youtube')||{value:''}).value || currentStore.youtube || '',
+        pix: (document.getElementById('field-pix')||{value:''}).value || currentStore.pix || '',
+        horarios: (document.getElementById('field-horarios')||{value:''}).value || currentStore.horarios || '',
+        mapsUrl: (document.getElementById('field-mapsUrl')||{value:''}).value || currentStore.mapsUrl || '',
         descricao: (document.getElementById('field-descricao')||{value:''}).value || currentStore.descricao || '',
         foto: (document.getElementById('field-foto')||{value:''}).value || currentStore.foto || '',
         capa: (document.getElementById('field-capa')||{value:''}).value || currentStore.capa || '',
-        corTema: (document.getElementById('field-corTema')||{value:'#10b981'}).value || '#10b981',
-        layoutTema: currentStore.layoutTema || 'dark',
+        corTema: (document.getElementById('field-corTema')||{value:''}).value || currentStore.corTema || '#f59e0b',
+        fonte: (document.getElementById('field-fonte')||{value:'Inter'}).value,
+        bgMode: (document.getElementById('field-bgMode')||{value:'theme-dark'}).value,
+        bgImage: (document.getElementById('field-bgImage')||{value:''}).value,
+        btnStyle: (document.getElementById('field-btnStyle')||{value:'btn-pill'}).value,
+        instagram: (document.getElementById('field-instagram')||{value:''}).value || currentStore.instagram || '',
+        youtube: (document.getElementById('field-youtube')||{value:''}).value || currentStore.youtube || '',
+        facebook: (document.getElementById('field-facebook')||{value:''}).value || currentStore.facebook || '',
         plano: currentStore.plano || 'basico',
-        slug: currentSlug,
         catalogo: catalog
       };
     }
@@ -860,6 +866,24 @@ function setThemeColor(hex) {
             doc.open();
             doc.write(html);
             doc.close();
+
+            // Apply No-Code Customizations immediately after write
+            if (doc.body) {
+              if (data.fonte) doc.body.style.fontFamily = data.fonte + ', sans-serif';
+              if (data.bgMode) {
+                doc.body.classList.remove('theme-dark', 'theme-light', 'theme-vibrant');
+                doc.body.classList.add(data.bgMode);
+              }
+              if (data.bgImage) {
+                doc.body.style.backgroundImage = 'url(' + data.bgImage + ')';
+                doc.body.style.backgroundSize = 'cover';
+                doc.body.style.backgroundAttachment = 'fixed';
+              }
+              if (data.btnStyle) {
+                doc.body.classList.remove('btn-pill', 'btn-square', 'btn-neon', 'btn-gradient');
+                doc.body.classList.add(data.btnStyle);
+              }
+            }
           }
         }
       } catch (err) {
