@@ -841,17 +841,24 @@ function setThemeColor(hex) {
     }
 
     function triggerLivePreview() {
-      var data = getFormData();
-      var plano = (currentStore.plano || 'basico').toLowerCase();
-      var html = '';
-      if (plano === 'master') html = clientRenderMaster(data);
-      else if (plano === 'ecommerce') html = clientRenderEcommerce(data);
-      else if (plano === 'pro') html = clientRenderPro(data);
-      else html = clientRenderBasico(data);
-      var iframe = document.getElementById('previewIframe');
-      iframe.contentDocument.open();
-      iframe.contentDocument.write(html);
-      iframe.contentDocument.close();
+      try {
+        var data = getFormData();
+        var plano = (currentStore.plano || 'basico').toLowerCase();
+        var html = '';
+        if (typeof clientRenderMaster === 'function' && plano === 'master') html = clientRenderMaster(data);
+        else if (typeof clientRenderEcommerce === 'function' && plano === 'ecommerce') html = clientRenderEcommerce(data);
+        else if (typeof clientRenderPro === 'function' && plano === 'pro') html = clientRenderPro(data);
+        else if (typeof clientRenderBasico === 'function') html = clientRenderBasico(data);
+        
+        var iframe = document.getElementById('iframe-live-preview') || document.getElementById('previewFrame') || document.getElementById('previewIframe');
+        if (iframe && iframe.contentDocument) {
+          iframe.contentDocument.open();
+          iframe.contentDocument.write(html);
+          iframe.contentDocument.close();
+        }
+      } catch (err) {
+        console.warn('Live preview update warning:', err.message);
+      }
     }
 
     function updateLiveSimulator() { triggerLivePreview(); }
