@@ -140,22 +140,22 @@
           <div class="form-grid">
             <div class="form-group">
               <label>Nome Comercial da Empresa</label>
-              <input type="text" id="field-nome" class="form-control">
+              <input type="text" id="field-nome" oninput="triggerLivePreview()" class="form-control">
             </div>
 
             <div class="form-group">
               <label>Segmento / Ramos de Atuação (Nicho)</label>
-              <input type="text" id="field-nicho" class="form-control">
+              <input type="text" id="field-nicho" oninput="triggerLivePreview()" class="form-control">
             </div>
 
             <div class="form-group">
               <label>Cidade / Estado de Atendimento</label>
-              <input type="text" id="field-cidade" class="form-control">
+              <input type="text" id="field-cidade" oninput="triggerLivePreview()" class="form-control">
             </div>
 
             <div class="form-group">
               <label>WhatsApp de Vendas / Atendimento</label>
-              <input type="text" id="field-whatsapp" class="form-control">
+              <input type="text" id="field-whatsapp" oninput="triggerLivePreview()" class="form-control">
             </div>
 
             <div class="form-group">
@@ -176,7 +176,7 @@
 
           <div class="form-group" style="margin-top:10px;">
             <label>Apresentação / Sobre a Empresa</label>
-            <textarea id="field-descricao" rows="3" class="form-control"></textarea>
+            <textarea id="field-descricao" oninput="triggerLivePreview()" rows="3" class="form-control"></textarea>
           </div>
         </div>
 
@@ -187,7 +187,7 @@
           <div class="form-grid">
             <div class="form-group">
               <label>URL da Foto da Logomarca / Perfil (Google Drive ou Web)</label>
-              <input type="text" id="field-foto" class="form-control" onchange="previewLogo(this.value)">
+              <input type="text" id="field-foto" oninput="triggerLivePreview()" class="form-control" onchange="previewLogo(this.value)">
               <div id="logo-preview-box" style="margin-top:10px; display:flex; align-items:center; gap:10px;">
                 <img id="img-logo-preview" src="" style="width:50px; height:50px; border-radius:12px; object-fit:cover; border:2px solid #f59e0b; display:none;">
                 <span style="font-size:0.78rem; color:#94a3b8;">Pré-visualização do Logo</span>
@@ -196,7 +196,7 @@
 
             <div class="form-group">
               <label>URL da Imagem de Capa do Topo (Banner)</label>
-              <input type="text" id="field-capa" class="form-control">
+              <input type="text" id="field-capa" oninput="triggerLivePreview()" class="form-control">
             </div>
 
             <div class="form-group">
@@ -223,12 +223,12 @@
           <div class="form-grid">
             <div class="form-group">
               <label><i class="fa-brands fa-instagram" style="color:#e1306c"></i> Link do Instagram</label>
-              <input type="text" id="field-instagram" class="form-control">
+              <input type="text" id="field-instagram" oninput="triggerLivePreview()" class="form-control">
             </div>
 
             <div class="form-group">
               <label><i class="fa-brands fa-youtube" style="color:#ef4444"></i> Link do YouTube</label>
-              <input type="text" id="field-youtube" class="form-control">
+              <input type="text" id="field-youtube" oninput="triggerLivePreview()" class="form-control">
             </div>
 
             <div class="form-group">
@@ -534,12 +534,43 @@
           btn.classList.remove('active');
         }
       });
+      triggerLivePreview();
     }
 
-    function updateLiveSimulator() {
-      const iframe = document.getElementById('previewIframe');
-      iframe.src = `https://hodrichtech.github.io/${currentSlug}/`;
+    function getFormData() {
+      return {
+        nome: (document.getElementById('field-nome')||{value:''}).value || currentStore.nome || '',
+        nicho: (document.getElementById('field-nicho')||{value:''}).value || currentStore.nicho || '',
+        cidade: (document.getElementById('field-cidade')||{value:''}).value || currentStore.cidade || '',
+        whatsapp: (document.getElementById('field-whatsapp')||{value:''}).value || currentStore.whatsapp || '',
+        instagram: (document.getElementById('field-instagram')||{value:''}).value || currentStore.instagram || '',
+        youtube: (document.getElementById('field-youtube')||{value:''}).value || currentStore.youtube || '',
+        descricao: (document.getElementById('field-descricao')||{value:''}).value || currentStore.descricao || '',
+        foto: (document.getElementById('field-foto')||{value:''}).value || currentStore.foto || '',
+        capa: (document.getElementById('field-capa')||{value:''}).value || currentStore.capa || '',
+        corTema: (document.getElementById('field-corTema')||{value:'#10b981'}).value || '#10b981',
+        layoutTema: currentStore.layoutTema || 'dark',
+        plano: currentStore.plano || 'basico',
+        slug: currentSlug,
+        catalogo: catalog
+      };
     }
+
+    function triggerLivePreview() {
+      var data = getFormData();
+      var plano = (currentStore.plano || 'basico').toLowerCase();
+      var html = '';
+      if (plano === 'master') html = clientRenderMaster(data);
+      else if (plano === 'ecommerce') html = clientRenderEcommerce(data);
+      else if (plano === 'pro') html = clientRenderPro(data);
+      else html = clientRenderBasico(data);
+      var iframe = document.getElementById('previewIframe');
+      iframe.contentDocument.open();
+      iframe.contentDocument.write(html);
+      iframe.contentDocument.close();
+    }
+
+    function updateLiveSimulator() { triggerLivePreview(); }
 
     function parseDriveUrl(url) {
       if (!url) return '';
@@ -629,6 +660,265 @@
       document.getElementById('header-actions').style.display = 'none';
       document.getElementById('view-login').style.display = 'flex';
     }
-  </script>
+  
+
+    // === CLIENT-SIDE RENDERERS (live preview engine) ===
+/**
+ * Client-Side Renderers — Vitrine Digital
+ * IMPORTANT: Uses string concatenation (NOT backtick template literals)
+ * to avoid conflicts when this file is inlined via Node.js template literals.
+ */
+
+function clientRenderBasico(mei) {
+  var phone = mei.whatsapp || '5513996351877';
+  var theme = mei.layoutTema || 'dark';
+  var nome = mei.nome || 'Minha Empresa';
+  var nicho = mei.nicho || 'Serviços';
+  var cidade = mei.cidade || '';
+  var descricao = mei.descricao || 'Descrição da sua empresa.';
+  var foto = mei.foto || 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=300';
+  var capa = mei.capa || 'https://images.unsplash.com/photo-1558002038-1055907df827?w=800';
+  var cor = mei.corTema || '#10b981';
+
+  var instagramLink = (mei.instagram && mei.instagram.trim()) ? '<a href="' + (mei.instagram.startsWith('http') ? mei.instagram : 'https://instagram.com/' + mei.instagram) + '" target="_blank" style="color:#e1306c; font-size:1.4rem;"><i class="fa-brands fa-instagram"></i></a>' : '';
+  var youtubeLink = (mei.youtube && mei.youtube.trim()) ? '<a href="' + (mei.youtube.startsWith('http') ? mei.youtube : 'https://youtube.com/' + mei.youtube) + '" target="_blank" style="color:#ef4444; font-size:1.4rem;"><i class="fa-brands fa-youtube"></i></a>' : '';
+
+  return '<!DOCTYPE html>' +
+  '<html lang="pt-BR"><head>' +
+  '<meta charset="UTF-8">' +
+  '<meta name="viewport" content="width=device-width, initial-scale=1.0">' +
+  '<title>' + nome + ' — Cartão Digital</title>' +
+  '<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Outfit:wght@700;800&display=swap" rel="stylesheet">' +
+  '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">' +
+  '<style>' +
+  '* { margin:0; padding:0; box-sizing:border-box; font-family:Inter,sans-serif; }' +
+  ':root { --p: ' + cor + '; }' +
+  'body { background:#070a12; color:#f8fafc; min-height:100vh; padding-bottom:40px; }' +
+  '.hero { width:100%; height:180px; background:url(' + capa + ') center/cover no-repeat; position:relative; }' +
+  '.hero-grad { position:absolute; inset:0; background:linear-gradient(180deg,transparent 30%,#070a12); }' +
+  '.box { max-width:600px; margin:0 auto; padding:0 20px; }' +
+  '.avatar { width:110px; height:110px; border-radius:50%; object-fit:cover; border:4px solid var(--p); box-shadow:0 8px 30px ' + cor + '55; margin-top:-55px; display:block; }' +
+  '.badge { display:inline-flex; align-items:center; gap:6px; background:' + cor + '22; border:1px solid ' + cor + '66; color:' + cor + '; font-size:0.75rem; font-weight:800; padding:5px 14px; border-radius:30px; margin:14px 0 8px; }' +
+  '.name { font-family:Outfit,sans-serif; font-size:1.9rem; font-weight:800; color:#fff; margin-bottom:4px; }' +
+  '.sub { color:' + cor + '; font-weight:700; margin-bottom:16px; }' +
+  '.desc { background:rgba(15,23,42,0.8); border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:16px; font-size:0.9rem; color:#94a3b8; line-height:1.6; margin-bottom:20px; }' +
+  '.btn-wa { display:flex; align-items:center; justify-content:center; gap:12px; background:linear-gradient(135deg,' + cor + ',' + cor + 'aa); color:#fff; text-decoration:none; padding:16px; border-radius:16px; font-weight:800; font-size:1.05rem; margin-bottom:16px; }' +
+  '.socials { display:flex; justify-content:center; gap:16px; margin-top:12px; }' +
+  'footer { text-align:center; margin-top:30px; color:#475569; font-size:0.78rem; }' +
+  '</style></head>' +
+  '<body>' +
+  '<div class="hero"><div class="hero-grad"></div></div>' +
+  '<div class="box">' +
+  '<img src="' + foto + '" class="avatar" alt="' + nome + '">' +
+  '<div class="badge"><i class="fa-solid fa-circle-check"></i> Plano Básico — Cartão Digital</div>' +
+  '<h1 class="name">' + nome + '</h1>' +
+  '<div class="sub"><i class="fa-solid fa-briefcase"></i> ' + nicho + (cidade ? ' · ' + cidade : '') + '</div>' +
+  '<div class="desc">' + descricao + '</div>' +
+  '<a href="https://wa.me/' + phone + '" target="_blank" class="btn-wa"><i class="fa-brands fa-whatsapp fa-xl"></i> Falar no WhatsApp</a>' +
+  ((instagramLink || youtubeLink) ? '<div class="socials">' + instagramLink + youtubeLink + '</div>' : '') +
+  '<footer>⚡ Vitrine Digital — GitHub Pages</footer>' +
+  '</div></body></html>';
+}
+
+function clientRenderMaster(mei) {
+  var phone = mei.whatsapp || '5513996351877';
+  var nome = mei.nome || 'Minha Empresa';
+  var nicho = mei.nicho || 'Serviços';
+  var cidade = mei.cidade || '';
+  var descricao = mei.descricao || '';
+  var foto = mei.foto || 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=300';
+  var capa = mei.capa || 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800';
+  var cor = mei.corTema || '#8b5cf6';
+  var theme = mei.layoutTema || 'dark';
+  var catalog = mei.catalogo || [];
+
+  var instagramBtn = (mei.instagram && mei.instagram.trim()) ? '<a href="' + (mei.instagram.startsWith('http') ? mei.instagram : 'https://instagram.com/' + mei.instagram) + '" target="_blank" style="color:#e1306c; font-size:1.3rem;"><i class="fa-brands fa-instagram"></i></a>' : '';
+  var youtubeBtn = (mei.youtube && mei.youtube.trim()) ? '<a href="' + (mei.youtube.startsWith('http') ? mei.youtube : 'https://youtube.com/' + mei.youtube) + '" target="_blank" style="color:#ef4444; font-size:1.3rem;"><i class="fa-brands fa-youtube"></i></a>' : '';
+
+  var servicos = catalog.filter(function(i) { return i.tipo !== 'produto'; });
+  var produtos = catalog.filter(function(i) { return i.tipo === 'produto'; });
+
+  var servicosHtml = servicos.map(function(item) {
+    return '<div style="background:rgba(15,23,42,0.85); border:1px solid rgba(255,255,255,0.08); border-radius:16px; overflow:hidden; display:flex; flex-direction:column;">' +
+      '<img src="' + (item.image || 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=400') + '" style="width:100%; height:140px; object-fit:cover;">' +
+      '<div style="padding:14px; flex:1; display:flex; flex-direction:column;">' +
+        '<div style="font-size:0.72rem; font-weight:800; color:' + cor + '; text-transform:uppercase; margin-bottom:4px;">✂️ Serviço</div>' +
+        '<div style="font-weight:700; color:#fff; margin-bottom:4px;">' + item.title + '</div>' +
+        '<div style="font-size:0.8rem; color:#94a3b8; flex:1;">' + (item.desc || '') + '</div>' +
+        '<div style="display:flex; align-items:center; justify-content:space-between; border-top:1px solid rgba(255,255,255,0.08); padding-top:10px; margin-top:10px;">' +
+          '<span style="font-weight:800; color:' + cor + ';">' + (item.priceStr || '') + '</span>' +
+          '<a href="https://wa.me/' + phone + '?text=' + encodeURIComponent('Olá! Quero solicitar: ' + item.title) + '" target="_blank" style="background:' + cor + '; color:#fff; text-decoration:none; padding:7px 12px; border-radius:8px; font-size:0.78rem; font-weight:700;"><i class="fa-brands fa-whatsapp"></i> Agendar</a>' +
+        '</div>' +
+      '</div></div>';
+  }).join('');
+
+  var produtosHtml = produtos.map(function(item) {
+    return '<div style="background:rgba(15,23,42,0.85); border:1px solid ' + cor + '44; border-radius:16px; overflow:hidden; display:flex; flex-direction:column;">' +
+      '<img src="' + (item.image || 'https://images.unsplash.com/photo-1535585209827-a15fcdbc4c2d?w=400') + '" style="width:100%; height:140px; object-fit:cover;">' +
+      '<div style="padding:14px; flex:1; display:flex; flex-direction:column;">' +
+        '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">' +
+          '<span style="font-size:0.72rem; font-weight:800; color:' + cor + '; text-transform:uppercase;">📦 Produto</span>' +
+          '<span style="background:' + cor + '22; border:1px solid ' + cor + '55; color:' + cor + '; font-size:0.7rem; font-weight:800; padding:3px 8px; border-radius:10px;">' + (item.estoque || 0) + ' un.</span>' +
+        '</div>' +
+        '<div style="font-weight:700; color:#fff; margin-bottom:4px;">' + item.title + '</div>' +
+        '<div style="display:flex; align-items:center; justify-content:space-between; border-top:1px solid rgba(255,255,255,0.08); padding-top:10px; margin-top:auto;">' +
+          '<span style="font-weight:800; color:' + cor + ';">' + (item.priceStr || '') + '</span>' +
+          '<a href="https://wa.me/' + phone + '?text=' + encodeURIComponent('Olá! Quero comprar: ' + item.title) + '" target="_blank" style="background:linear-gradient(135deg,' + cor + ',' + cor + 'aa); color:#fff; text-decoration:none; padding:7px 12px; border-radius:8px; font-size:0.78rem; font-weight:700;"><i class="fa-solid fa-cart-shopping"></i> Comprar</a>' +
+        '</div>' +
+      '</div></div>';
+  }).join('');
+
+  return '<!DOCTYPE html>' +
+  '<html lang="pt-BR"><head>' +
+  '<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">' +
+  '<title>' + nome + ' — Vitrine Master</title>' +
+  '<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Outfit:wght@700;800&display=swap" rel="stylesheet">' +
+  '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">' +
+  '<style>' +
+  '* { margin:0; padding:0; box-sizing:border-box; font-family:Inter,sans-serif; }' +
+  ':root { --p: ' + cor + '; }' +
+  'body { background:#070a12; color:#f8fafc; min-height:100vh; padding-bottom:40px; }' +
+  '.hero { width:100%; height:200px; background:url(' + capa + ') center/cover no-repeat; position:relative; }' +
+  '.hero-g { position:absolute; inset:0; background:linear-gradient(180deg,transparent 30%,#070a12); }' +
+  '.cnt { max-width:900px; margin:0 auto; padding:0 18px; }' +
+  '.profile { display:flex; align-items:flex-end; gap:16px; margin-top:-60px; margin-bottom:20px; flex-wrap:wrap; }' +
+  '.avatar { width:110px; height:110px; border-radius:20px; object-fit:cover; border:3px solid ' + cor + '; box-shadow:0 8px 30px ' + cor + '55; }' +
+  '.grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:16px; margin-bottom:30px; }' +
+  'footer { text-align:center; padding:20px; color:#475569; font-size:0.78rem; }' +
+  '</style></head><body>' +
+  '<div class="hero"><div class="hero-g"></div></div>' +
+  '<div class="cnt">' +
+  '<div class="profile">' +
+    '<img src="' + foto + '" class="avatar" alt="' + nome + '">' +
+    '<div style="flex:1;">' +
+      '<span style="background:' + cor + '22; border:1px solid ' + cor + '66; color:' + cor + '; font-size:0.72rem; font-weight:800; padding:4px 12px; border-radius:20px;">⭐ Plano Master</span>' +
+      '<h1 style="font-family:Outfit,sans-serif; font-size:1.8rem; font-weight:800; color:#fff; margin:6px 0 2px;">' + nome + '</h1>' +
+      '<div style="color:' + cor + '; font-weight:700; font-size:0.9rem;">' + nicho + (cidade ? ' · ' + cidade : '') + '</div>' +
+      ((instagramBtn || youtubeBtn) ? '<div style="display:flex; gap:12px; margin-top:8px;">' + instagramBtn + youtubeBtn + '</div>' : '') +
+    '</div>' +
+  '</div>' +
+  (servicos.length > 0 ? '<h2 style="font-family:Outfit,sans-serif; font-size:1.2rem; margin-bottom:14px; color:#fff;"><i class="fa-solid fa-scissors" style="color:' + cor + '"></i> Serviços & Atendimentos</h2><div class="grid">' + servicosHtml + '</div>' : '') +
+  (produtos.length > 0 ? '<h2 style="font-family:Outfit,sans-serif; font-size:1.2rem; margin:20px 0 14px; color:#fff;"><i class="fa-solid fa-boxes-stacked" style="color:' + cor + '"></i> Produtos em Estoque</h2><div class="grid">' + produtosHtml + '</div>' : '') +
+  (catalog.length === 0 ? '<div style="text-align:center; padding:40px; color:#475569;"><i class="fa-solid fa-boxes-stacked fa-2x"></i><p style="margin-top:12px;">Adicione serviços e produtos no painel ao lado!</p></div>' : '') +
+  '<footer>⚡ Vitrine Digital — GitHub Pages</footer>' +
+  '</div></body></html>';
+}
+
+function clientRenderEcommerce(mei) {
+  var phone = mei.whatsapp || '5513996351877';
+  var nome = mei.nome || 'Minha Empresa';
+  var nicho = mei.nicho || 'Gastronomia';
+  var cidade = mei.cidade || '';
+  var foto = mei.foto || 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=300';
+  var capa = mei.capa || 'https://images.unsplash.com/photo-1550547660-d9450f859349?w=800';
+  var cor = mei.corTema || '#ef4444';
+  var catalog = mei.catalogo || [];
+
+  var menuHtml = catalog.map(function(item) {
+    return '<div style="background:rgba(15,23,42,0.85); border:1px solid rgba(255,255,255,0.08); border-radius:16px; overflow:hidden; display:flex; flex-direction:column;">' +
+      '<img src="' + (item.image || 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400') + '" style="width:100%; height:150px; object-fit:cover;">' +
+      '<div style="padding:14px; flex:1; display:flex; flex-direction:column;">' +
+        '<div style="font-size:0.72rem; font-weight:800; color:' + cor + '; text-transform:uppercase; margin-bottom:4px;">' + (item.categoria || 'Cardápio') + '</div>' +
+        '<div style="font-weight:700; color:#fff; margin-bottom:6px;">' + item.title + '</div>' +
+        '<div style="font-size:0.8rem; color:#94a3b8; margin-bottom:12px; flex:1;">' + (item.desc || '') + '</div>' +
+        '<div style="display:flex; align-items:center; justify-content:space-between;">' +
+          '<span style="font-size:1.1rem; font-weight:800; color:' + cor + ';">' + (item.priceStr || '') + '</span>' +
+          '<a href="https://wa.me/' + phone + '?text=' + encodeURIComponent('Quero pedir: ' + item.title) + '" target="_blank" style="background:' + cor + '; color:#fff; text-decoration:none; padding:8px 14px; border-radius:10px; font-size:0.8rem; font-weight:700;"><i class="fa-brands fa-whatsapp"></i> Pedir</a>' +
+        '</div>' +
+      '</div></div>';
+  }).join('');
+
+  return '<!DOCTYPE html>' +
+  '<html lang="pt-BR"><head>' +
+  '<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">' +
+  '<title>' + nome + ' — Delivery</title>' +
+  '<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Outfit:wght@700;800&display=swap" rel="stylesheet">' +
+  '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">' +
+  '<style>' +
+  '* { margin:0; padding:0; box-sizing:border-box; font-family:Inter,sans-serif; }' +
+  'body { background:#070a12; color:#f8fafc; min-height:100vh; padding-bottom:40px; }' +
+  '.hero { width:100%; height:180px; background:url(' + capa + ') center/cover no-repeat; position:relative; }' +
+  '.hero-g { position:absolute; inset:0; background:linear-gradient(180deg,transparent 30%,#070a12); }' +
+  '.cnt { max-width:900px; margin:0 auto; padding:0 18px; }' +
+  '.profile { display:flex; align-items:flex-end; gap:16px; margin-top:-55px; margin-bottom:20px; }' +
+  '.avatar { width:100px; height:100px; border-radius:16px; object-fit:cover; border:3px solid ' + cor + '; }' +
+  '.grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:16px; margin-bottom:30px; }' +
+  'footer { text-align:center; padding:20px; color:#475569; font-size:0.78rem; }' +
+  '</style></head><body>' +
+  '<div class="hero"><div class="hero-g"></div></div>' +
+  '<div class="cnt">' +
+  '<div class="profile">' +
+    '<img src="' + foto + '" class="avatar" alt="' + nome + '">' +
+    '<div>' +
+      '<span style="background:' + cor + '22; border:1px solid ' + cor + '66; color:' + cor + '; font-size:0.72rem; font-weight:800; padding:4px 12px; border-radius:20px;">🛒 E-Commerce & Delivery</span>' +
+      '<h1 style="font-family:Outfit,sans-serif; font-size:1.8rem; font-weight:800; color:#fff; margin:6px 0 2px;">' + nome + '</h1>' +
+      '<div style="color:' + cor + '; font-weight:700; font-size:0.9rem;">' + nicho + (cidade ? ' · ' + cidade : '') + '</div>' +
+    '</div>' +
+  '</div>' +
+  '<h2 style="font-family:Outfit,sans-serif; font-size:1.2rem; margin-bottom:14px; color:#fff;"><i class="fa-solid fa-utensils" style="color:' + cor + '"></i> Cardápio</h2>' +
+  '<div class="grid">' + (menuHtml || '<div style="color:#475569; text-align:center; padding:30px;">Adicione itens no painel!</div>') + '</div>' +
+  '<footer>⚡ Vitrine Digital — GitHub Pages</footer>' +
+  '</div></body></html>';
+}
+
+function clientRenderPro(mei) {
+  var phone = mei.whatsapp || '5513996351877';
+  var nome = mei.nome || 'Minha Empresa';
+  var nicho = mei.nicho || 'Consultoria';
+  var cidade = mei.cidade || '';
+  var foto = mei.foto || 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=300';
+  var capa = mei.capa || 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800';
+  var cor = mei.corTema || '#38bdf8';
+  var catalog = mei.catalogo || [];
+
+  var catalogHtml = catalog.map(function(item) {
+    return '<div style="background:rgba(15,23,42,0.85); border:1px solid rgba(255,255,255,0.08); border-radius:16px; overflow:hidden; display:flex; flex-direction:column;">' +
+      '<img src="' + (item.image || 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=400') + '" style="width:100%; height:150px; object-fit:cover;">' +
+      '<div style="padding:14px; flex:1; display:flex; flex-direction:column;">' +
+        '<div style="font-size:0.72rem; font-weight:800; color:' + cor + '; text-transform:uppercase; margin-bottom:4px;">' + (item.categoria || 'Destaque') + '</div>' +
+        '<div style="font-weight:700; color:#fff; margin-bottom:4px;">' + item.title + '</div>' +
+        '<div style="font-size:0.8rem; color:#94a3b8; margin-bottom:12px; flex:1;">' + (item.desc || '') + '</div>' +
+        '<div style="display:flex; align-items:center; justify-content:space-between; border-top:1px solid rgba(255,255,255,0.08); padding-top:10px;">' +
+          '<span style="font-weight:800; color:' + cor + ';">' + (item.priceStr || '') + '</span>' +
+          '<a href="https://wa.me/' + phone + '?text=' + encodeURIComponent('Olá! Tenho interesse em: ' + item.title) + '" target="_blank" style="background:#25D366; color:#fff; text-decoration:none; padding:7px 12px; border-radius:8px; font-size:0.78rem; font-weight:700;"><i class="fa-brands fa-whatsapp"></i> Consultar</a>' +
+        '</div>' +
+      '</div></div>';
+  }).join('');
+
+  return '<!DOCTYPE html>' +
+  '<html lang="pt-BR"><head>' +
+  '<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">' +
+  '<title>' + nome + ' — Pro</title>' +
+  '<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Outfit:wght@700;800&display=swap" rel="stylesheet">' +
+  '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">' +
+  '<style>' +
+  '* { margin:0; padding:0; box-sizing:border-box; font-family:Inter,sans-serif; }' +
+  'body { background:#070a12; color:#f8fafc; min-height:100vh; padding-bottom:40px; }' +
+  '.hero { width:100%; height:180px; background:url(' + capa + ') center/cover no-repeat; position:relative; }' +
+  '.hero-g { position:absolute; inset:0; background:linear-gradient(180deg,transparent 30%,#070a12); }' +
+  '.cnt { max-width:900px; margin:0 auto; padding:0 18px; }' +
+  '.profile { display:flex; align-items:flex-end; gap:16px; margin-top:-55px; margin-bottom:20px; }' +
+  '.avatar { width:100px; height:100px; border-radius:16px; object-fit:cover; border:3px solid ' + cor + '; }' +
+  '.grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:16px; margin-bottom:30px; }' +
+  'footer { text-align:center; padding:20px; color:#475569; font-size:0.78rem; }' +
+  '</style></head><body>' +
+  '<div class="hero"><div class="hero-g"></div></div>' +
+  '<div class="cnt">' +
+  '<div class="profile">' +
+    '<img src="' + foto + '" class="avatar" alt="' + nome + '">' +
+    '<div>' +
+      '<span style="background:' + cor + '22; border:1px solid ' + cor + '66; color:' + cor + '; font-size:0.72rem; font-weight:800; padding:4px 12px; border-radius:20px;">🏆 Plano Pro</span>' +
+      '<h1 style="font-family:Outfit,sans-serif; font-size:1.8rem; font-weight:800; color:#fff; margin:6px 0 2px;">' + nome + '</h1>' +
+      '<div style="color:' + cor + '; font-weight:700; font-size:0.9rem;">' + nicho + (cidade ? ' · ' + cidade : '') + '</div>' +
+    '</div>' +
+  '</div>' +
+  '<h2 style="font-family:Outfit,sans-serif; font-size:1.2rem; margin-bottom:14px; color:#fff;"><i class="fa-solid fa-briefcase" style="color:' + cor + '"></i> Catálogo de Serviços</h2>' +
+  '<div class="grid">' + (catalogHtml || '<div style="color:#475569; text-align:center; padding:30px;">Adicione itens no painel!</div>') + '</div>' +
+  '<footer>⚡ Vitrine Digital — GitHub Pages</footer>' +
+  '</div></body></html>';
+}
+
+
+</script>
 </body>
 </html>
