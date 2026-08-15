@@ -753,72 +753,76 @@ function applyButtonStyle(styleClass) {
   }
 }
 
-function applyCustomFont(fontName) {
-  var iframe = document.getElementById('iframe-live-preview') || document.getElementById('previewFrame');
-  if (iframe && iframe.contentDocument && iframe.contentDocument.body) {
-    iframe.contentDocument.body.style.fontFamily = fontName + ', sans-serif';
-  }
-}
+var activeBgPattern = 'none';
+    var activeLayoutMode = 'hero-grid';
 
-function applyBgMode(modeClass) {
-  var iframe = document.getElementById('iframe-live-preview') || document.getElementById('previewFrame');
-  if (iframe && iframe.contentDocument && iframe.contentDocument.body) {
-    var b = iframe.contentDocument.body;
-    b.classList.remove('theme-dark', 'theme-light', 'theme-vibrant');
-    b.classList.add(modeClass);
-  }
-}
-
-function applyBgImage(url) {
-  var iframe = document.getElementById('iframe-live-preview') || document.getElementById('previewFrame');
-  if (iframe && iframe.contentDocument && iframe.contentDocument.body) {
-    var b = iframe.contentDocument.body;
-    if (url && url.trim()) {
-      b.style.backgroundImage = 'url(' + url.trim() + ')';
-      b.style.backgroundSize = 'cover';
-      b.style.backgroundAttachment = 'fixed';
-    } else {
-      b.style.backgroundImage = 'none';
-    }
-  }
-}
-
-function toggleBgImage() {
-  var input = document.getElementById('field-bgImage');
-  if (!input) return;
-  if (input.value) {
-    input.value = '';
-    applyBgImage('');
-  } else {
-    input.value = 'https://images.unsplash.com/photo-1557683316-973673baf926?w=1200';
-    applyBgImage(input.value);
-  }
-}
-
-function moveSection(secId, dir) {
-  var iframe = document.getElementById('iframe-live-preview') || document.getElementById('previewFrame');
-  if (!iframe || !iframe.contentDocument) return;
-  var doc = iframe.contentDocument;
-  var target = doc.getElementById('sec-' + secId) || doc.querySelector('.' + secId + '-section');
-  if (!target || !target.parentNode) return;
-  if (dir === 'up' && target.previousElementSibling) {
-    target.parentNode.insertBefore(target, target.previousElementSibling);
-  } else if (dir === 'down' && target.nextElementSibling) {
-    target.parentNode.insertBefore(target.nextElementSibling, target);
-  }
-}
-
-function setThemeColor(hex) {
-      document.getElementById('field-corTema').value = hex;
-      document.getElementById('field-corTema-hex').value = hex;
-      document.querySelectorAll('.swatch-btn').forEach(btn => {
-        if (btn.style.backgroundColor === hex || btn.getAttribute('onclick').includes(hex)) {
-          btn.classList.add('active');
-        } else {
-          btn.classList.remove('active');
-        }
-      });
+    function applyCustomFont(fontName) {
       triggerLivePreview();
+    }
+
+    function applyBgMode(modeClass) {
+      triggerLivePreview();
+    }
+
+    function applyBgImage(url) {
+      triggerLivePreview();
+    }
+
+    function toggleBgImage() {
+      var input = document.getElementById('field-bgImage');
+      if (!input) return;
+      if (input.value) {
+        input.value = '';
+      } else {
+        input.value = 'https://images.unsplash.com/photo-1557683316-973673baf926?w=1200';
+      }
+      triggerLivePreview();
+    }
+
+    function applySvgPattern(patternKey) {
+      activeBgPattern = patternKey;
+      triggerLivePreview();
+    }
+
+    function applyButtonStyle(styleClass) {
+      triggerLivePreview();
+    }
+
+    function setLayoutStyle(styleKey) {
+      activeLayoutMode = styleKey;
+      triggerLivePreview();
+    }
+
+    function applyThemePreset(key) {
+      var PRESETS = {
+        'dark-neon': { hex: '#6366f1', mode: 'theme-dark', layout: 'hero-grid', font: 'Outfit' },
+        'minimal-clean': { hex: '#0284c7', mode: 'theme-light', layout: 'hero-grid', font: 'Inter' },
+        'gold-luxury': { hex: '#f59e0b', mode: 'theme-dark', layout: 'glassmorphism', font: 'Outfit' },
+        'warm-delivery': { hex: '#ea580c', mode: 'theme-vibrant', layout: 'compact-list', font: 'Poppins' },
+        'clinical-clean': { hex: '#0d9488', mode: 'theme-light', layout: 'compact-list', font: 'Inter' }
+      };
+      var p = PRESETS[key];
+      if (!p) return;
+      
+      document.getElementById('field-corTema').value = p.hex;
+      document.getElementById('field-corTema-hex').value = p.hex;
+      document.getElementById('field-fonte').value = p.font;
+      document.getElementById('field-bgMode').value = p.mode;
+      activeLayoutMode = p.layout;
+      triggerLivePreview();
+    }
+
+    function moveSection(secId, dir) {
+      var iframe = document.getElementById('iframe-live-preview') || document.getElementById('previewFrame') || document.getElementById('previewIframe');
+      if (!iframe || !iframe.contentDocument) return;
+      var doc = iframe.contentDocument;
+      var target = doc.getElementById('sec-' + secId) || doc.querySelector('.' + secId + '-section') || doc.querySelector('.' + secId + '-grid');
+      if (!target || !target.parentNode) return;
+      if (dir === 'up' && target.previousElementSibling) {
+        target.parentNode.insertBefore(target, target.previousElementSibling);
+      } else if (dir === 'down' && target.nextElementSibling) {
+        target.parentNode.insertBefore(target.nextElementSibling, target);
+      }
     }
 
     function getFormData() {
@@ -837,7 +841,9 @@ function setThemeColor(hex) {
         fonte: (document.getElementById('field-fonte')||{value:'Inter'}).value,
         bgMode: (document.getElementById('field-bgMode')||{value:'theme-dark'}).value,
         bgImage: (document.getElementById('field-bgImage')||{value:''}).value,
+        bgPattern: activeBgPattern,
         btnStyle: (document.getElementById('field-btnStyle')||{value:'btn-pill'}).value,
+        layoutMode: activeLayoutMode,
         instagram: (document.getElementById('field-instagram')||{value:''}).value || currentStore.instagram || '',
         youtube: (document.getElementById('field-youtube')||{value:''}).value || currentStore.youtube || '',
         facebook: (document.getElementById('field-facebook')||{value:''}).value || currentStore.facebook || '',
