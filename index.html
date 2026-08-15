@@ -19,11 +19,11 @@
     .btn-live-site { background: rgba(56,189,248,0.15); border: 1px solid #38bdf8; color: #38bdf8; padding: 8px 16px; border-radius: 10px; font-weight: 700; text-decoration: none; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 6px; }
     .btn-logout { background: rgba(239,68,68,0.15); border: 1px solid #ef4444; color: #fca5a5; padding: 8px 16px; border-radius: 10px; font-weight: 700; text-decoration: none; font-size: 0.85rem; cursor: pointer; border: none; }
 
-    .container { max-width: 920px; margin: 30px auto; padding: 0 20px; }
+    .container { max-width: 1050px; margin: 30px auto; padding: 0 20px; }
     
     /* LOGIN CARD */
     .login-wrapper { display: flex; align-items: center; justify-content: center; min-height: 80vh; }
-    .login-card { max-width: 440px; width: 100%; background: rgba(15,23,42,0.85); border: 1px solid rgba(255,255,255,0.08); border-radius: 28px; padding: 36px 28px; backdrop-filter: blur(16px); box-shadow: 0 20px 40px rgba(0,0,0,0.6); }
+    .login-card { max-width: 480px; width: 100%; background: rgba(15,23,42,0.85); border: 1px solid rgba(255,255,255,0.08); border-radius: 28px; padding: 36px 28px; backdrop-filter: blur(16px); box-shadow: 0 20px 40px rgba(0,0,0,0.6); }
     
     .form-group { margin-bottom: 18px; text-align: left; }
     .form-group label { display: block; font-size: 0.82rem; font-weight: 700; color: #94a3b8; margin-bottom: 6px; }
@@ -36,6 +36,11 @@
     .sec-header { font-family: 'Outfit', sans-serif; font-size: 1.3rem; font-weight: 700; color: #fff; margin-bottom: 18px; display: flex; align-items: center; gap: 10px; }
 
     .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; }
+
+    /* COLOR SWATCHES */
+    .color-swatches { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
+    .swatch-btn { width: 36px; height: 36px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.2); cursor: pointer; transition: transform 0.2s, border-color 0.2s; }
+    .swatch-btn:hover, .swatch-btn.active { transform: scale(1.15); border-color: #fff; box-shadow: 0 0 12px rgba(255,255,255,0.5); }
 
     .catalog-list { display: grid; gap: 14px; margin-bottom: 20px; }
     .item-row { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); padding: 16px; border-radius: 14px; display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; }
@@ -51,6 +56,15 @@
     .alert-banner { padding: 16px; border-radius: 14px; margin-bottom: 24px; font-weight: 600; display: flex; align-items: center; gap: 12px; line-height: 1.4; }
     .alert-success { background: rgba(16,185,129,0.15); border: 1px solid #10b981; color: #6ee7b7; }
     .alert-info { background: rgba(56,189,248,0.15); border: 1px solid #38bdf8; color: #7dd3fc; }
+    .alert-demo-mode { background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.3); color: #fbbf24; }
+
+    /* LAYOUT EDITOR + PREVIEW */
+    .editor-layout { display: grid; grid-template-columns: 1fr 340px; gap: 24px; }
+    @media (max-width: 900px) { .editor-layout { grid-template-columns: 1fr; } }
+
+    .preview-sticky { position: sticky; top: 90px; }
+    .preview-frame-box { width: 100%; height: 600px; background: #000; border-radius: 32px; border: 8px solid #1e293b; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.8); }
+    .preview-iframe { width: 100%; height: 100%; border: none; background: #070a12; }
   </style>
 </head>
 <body>
@@ -58,30 +72,36 @@
   <!-- HEADER -->
   <header>
     <a href="#" class="logo">⚡ Vitrine<span>Gestão Serverless</span></a>
-    <span class="badge-cloud"><i class="fa-solid fa-cloud"></i> Hospedado 100% no GitHub Pages (Sem Servidor Físico)</span>
+    <span class="badge-cloud"><i class="fa-solid fa-cloud"></i> Painel em Nuvem no GitHub Pages</span>
     <div id="header-actions" style="display:none; align-items:center; gap:12px;">
       <a id="link-live-site" href="#" target="_blank" class="btn-live-site">
-        <i class="fa-solid fa-globe"></i> Ver Site no GitHub Pages
+        <i class="fa-solid fa-globe"></i> Ver Site ao Vivo
       </a>
       <button onclick="logout()" class="btn-logout"><i class="fa-solid fa-power-off"></i> Sair</button>
     </div>
   </header>
 
-  <!-- VISTA 1: LOGIN -->
+  <!-- VISTA 1: LOGIN E SELEÇÃO DE MODELOS -->
   <div id="view-login" class="login-wrapper">
     <div class="login-card">
       <div style="text-align:center; margin-bottom:20px;">
-        <h2 style="font-family:'Outfit',sans-serif; font-size:1.6rem; color:#fff;">Acesse sua Vitrine</h2>
-        <p style="font-size:0.85rem; color:#94a3b8; margin-top:4px;">Painel 100% em Nuvem Gratuita no GitHub</p>
+        <h2 style="font-family:'Outfit',sans-serif; font-size:1.6rem; color:#fff;">Acesse o Painel de Gestão</h2>
+        <p style="font-size:0.85rem; color:#94a3b8; margin-top:4px;">Selecione qualquer um dos 10 demonstrativos para testar a interface de edição:</p>
       </div>
 
       <div class="form-group">
-        <label><i class="fa-solid fa-store"></i> Escolha ou Digite a Empresa (Slug)</label>
+        <label><i class="fa-solid fa-store"></i> Escolha o Modelo Demonstrativo (10 Segmentos)</label>
         <select id="login-slug-select" class="form-control" onchange="onSelectSlugChange(this)">
-          <option value="basico-chaveiro">🔑 Marcos Chaveiro 24h (Plano Básico)</option>
-          <option value="master-salao">💅 Studio Maria — Beauty (Plano Master)</option>
-          <option value="carol-imoveis">🏢 Carolina Silveira — Imóveis (Plano Pro)</option>
-          <option value="pro-hamburgueria">🍔 Burger House Artesanal (Plano E-Commerce)</option>
+          <option value="basico-chaveiro">🔑 Chaveiro Express 24h (Plano Básico R$ 50)</option>
+          <option value="basico-guincho">🚨 Guincho & Auto Socorro (Plano Básico R$ 50)</option>
+          <option value="master-salao">💅 Studio Beauty & Hair (Plano Master R$ 100)</option>
+          <option value="master-mecanica">🔧 Auto Center & Mecânica (Plano Master R$ 100)</option>
+          <option value="master-marcenaria">🛋️ Marcenaria & Design (Plano Master R$ 100)</option>
+          <option value="master-solarenergia">☀️ Solar Tech — Energia Solar (Plano Master R$ 100)</option>
+          <option value="pro-imobiliaria" selected>🏢 Prime Imóveis & Consultoria (Plano Pro R$ 150)</option>
+          <option value="pro-clinica">🩺 Odonto & Estética Avançada (Plano Pro R$ 150)</option>
+          <option value="pro-petshop">🐶 Pet Care & Veterinária (Plano Pro R$ 150)</option>
+          <option value="pro-hamburgueria">🍔 Burger House Artesanal (Plano Food / E-Commerce)</option>
           <option value="custom">✏️ Outra Empresa (Digitar Slug)</option>
         </select>
       </div>
@@ -96,266 +116,347 @@
         <input type="password" id="login-senha" value="123456" class="form-control">
       </div>
 
-      <button onclick="login()" class="btn-action"><i class="fa-solid fa-right-to-bracket"></i> Entrar no Painel</button>
+      <button onclick="login()" class="btn-action"><i class="fa-solid fa-right-to-bracket"></i> Entrar e Testar Edição</button>
     </div>
   </div>
 
-  <!-- VISTA 2: PAINEL DE EDIÇÃO -->
+  <!-- VISTA 2: EDITOR COM SIMULADOR AO VIVO -->
   <div id="view-editor" class="container" style="display:none;">
-    <div style="margin-bottom:24px;">
-      <span id="badge-segment" class="badge-cloud">🏢 Plano Pro</span>
-      <h1 id="editor-title" class="page-title" style="margin-top:6px;">Painel de Edição da Empresa</h1>
-      <p class="page-sub">Edição direta sem depender de servidores locais. As alterações são salvas instantaneamente no GitHub Pages!</p>
+    
+    <div id="banner-notification" class="alert-banner alert-demo-mode">
+      <i class="fa-solid fa-flask fa-lg"></i>
+      <div>
+        <b>🧪 Modo de Teste Interativo & Simulação:</b> Você está testando a interface de gestão. Altere cores, logotipos, mapas e itens do catálogo para visualizar em tempo real no simulador ao lado. Os demonstrativos mestres são protegidos contra sobrescrita acidental!
+      </div>
     </div>
 
-    <div id="banner-notification" class="alert-banner alert-info">
-      <i class="fa-solid fa-cloud-check fa-lg"></i>
-      <div><b>Ambiente Cloud Ativo:</b> Você está conectado diretamente ao GitHub Pages.</div>
-    </div>
+    <div class="editor-layout">
+      <!-- PAINEL DE FORMULÁRIOS -->
+      <div>
+        <!-- 1. DADOS PRINCIPAIS DO NEGÓCIO -->
+        <div class="card-section">
+          <div class="sec-header"><i class="fa-solid fa-shop" style="color:#10b981"></i> Dados Principais da Empresa</div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Nome Comercial da Empresa</label>
+              <input type="text" id="field-nome" class="form-control">
+            </div>
 
-    <!-- FORMULÁRIO -->
-    <form id="editor-form" onsubmit="event.preventDefault(); saveChanges();">
-      
-      <!-- 1. DADOS DA EMPRESA -->
-      <div class="card-section">
-        <div class="sec-header"><i class="fa-solid fa-id-card" style="color:#10b981"></i> Informações Principais da Empresa</div>
-        <div class="form-grid">
-          <div class="form-group">
-            <label>Nome Comercial da Empresa</label>
-            <input type="text" id="field-nome" class="form-control" required>
+            <div class="form-group">
+              <label>Segmento / Ramos de Atuação (Nicho)</label>
+              <input type="text" id="field-nicho" class="form-control">
+            </div>
+
+            <div class="form-group">
+              <label>Cidade / Estado de Atendimento</label>
+              <input type="text" id="field-cidade" class="form-control">
+            </div>
+
+            <div class="form-group">
+              <label>WhatsApp de Vendas / Atendimento</label>
+              <input type="text" id="field-whatsapp" class="form-control">
+            </div>
+
+            <div class="form-group">
+              <label>Chave PIX (para sinal ou pagamento)</label>
+              <input type="text" id="field-pix" class="form-control">
+            </div>
+
+            <div class="form-group">
+              <label>Horários de Funcionamento</label>
+              <input type="text" id="field-horarios" class="form-control">
+            </div>
+
+            <div class="form-group">
+              <label><i class="fa-solid fa-map-location-dot" style="color:#ef4444"></i> Link do Google Maps (Localização 100% Pública)</label>
+              <input type="text" id="field-mapsUrl" class="form-control" placeholder="https://www.google.com/maps?q=Regiao+Metropolitana+SP">
+            </div>
           </div>
 
-          <div class="form-group">
-            <label>Segmento / Nicho de Atuação</label>
-            <input type="text" id="field-nicho" class="form-control" required>
-          </div>
-
-          <div class="form-group">
-            <label>Cidade / Região de Atendimento</label>
-            <input type="text" id="field-cidade" class="form-control">
-          </div>
-
-          <div class="form-group">
-            <label>WhatsApp de Atendimento (com DDD)</label>
-            <input type="text" id="field-whatsapp" class="form-control">
-          </div>
-
-          <div class="form-group">
-            <label>Chave PIX (para pagamentos)</label>
-            <input type="text" id="field-pix" class="form-control">
-          </div>
-
-          <div class="form-group">
-            <label>Horários de Funcionamento</label>
-            <input type="text" id="field-horarios" class="form-control">
-          </div>
-        </div>
-
-        <div class="form-group" style="margin-top:10px;">
-          <label>Apresentação / Descrição Livre</label>
-          <textarea id="field-descricao" rows="3" class="form-control"></textarea>
-        </div>
-      </div>
-
-      <!-- 2. REDES SOCIAIS & VÍDEOS -->
-      <div class="card-section">
-        <div class="sec-header"><i class="fa-solid fa-share-nodes" style="color:#a855f7"></i> Redes Sociais & Canal de Vídeos</div>
-        <div class="form-grid">
-          <div class="form-group">
-            <label><i class="fa-brands fa-instagram" style="color:#e1306c"></i> Link do Instagram</label>
-            <input type="text" id="field-instagram" class="form-control">
-          </div>
-
-          <div class="form-group">
-            <label><i class="fa-brands fa-youtube" style="color:#ef4444"></i> Link do YouTube / Tour Virtual</label>
-            <input type="text" id="field-youtube" class="form-control">
-          </div>
-
-          <div class="form-group">
-            <label><i class="fa-brands fa-facebook" style="color:#1877f2"></i> Link do Facebook</label>
-            <input type="text" id="field-facebook" class="form-control">
+          <div class="form-group" style="margin-top:10px;">
+            <label>Apresentação / Sobre a Empresa</label>
+            <textarea id="field-descricao" rows="3" class="form-control"></textarea>
           </div>
         </div>
-      </div>
 
-      <!-- 3. FOTOS E APARÊNCIA (GOOGLE DRIVE SUPPORT) -->
-      <div class="card-section">
-        <div class="sec-header"><i class="fa-solid fa-image" style="color:#38bdf8"></i> Imagens de Perfil & Capa (Aceita Google Drive!)</div>
-        <div class="form-grid">
-          <div class="form-group">
-            <label>URL da Foto de Perfil / Logo (Google Drive ou Web)</label>
-            <input type="text" id="field-foto" class="form-control" onchange="convertInputDriveUrl(this)">
-          </div>
-
-          <div class="form-group">
-            <label>URL da Imagem de Capa (Google Drive ou Web)</label>
-            <input type="text" id="field-capa" class="form-control" onchange="convertInputDriveUrl(this)">
-          </div>
-        </div>
-      </div>
-
-      <!-- 4. CATÁLOGO / PRODUTOS / IMÓVEIS -->
-      <div class="card-section">
-        <div class="sec-header" id="sec-catalog-title">
-          <i class="fa-solid fa-boxes-stacked" style="color:#f59e0b"></i> Catálogo Específico
-        </div>
-        
-        <div id="catalog-container" class="catalog-list"></div>
-
-        <div style="background:rgba(255,255,255,0.03); border:1px dashed rgba(255,255,255,0.15); padding:20px; border-radius:16px;">
-          <h4 style="font-size:0.95rem; margin-bottom:14px; color:#fbbf24;" id="add-item-header">+ Adicionar Item ao Catálogo</h4>
+        <!-- 2. PERSONALIZAÇÃO VISUAL: LOGO & PALETA DE CORES -->
+        <div class="card-section">
+          <div class="sec-header"><i class="fa-solid fa-palette" style="color:#f59e0b"></i> Personalização Visual: Logotipo & Paleta de Cores</div>
           
           <div class="form-grid">
             <div class="form-group">
-              <label id="lbl-item-title">Título / Nome</label>
-              <input type="text" id="new-title" class="form-control">
+              <label>URL da Foto da Logomarca / Perfil (Google Drive ou Web)</label>
+              <input type="text" id="field-foto" class="form-control" onchange="previewLogo(this.value)">
+              <div id="logo-preview-box" style="margin-top:10px; display:flex; align-items:center; gap:10px;">
+                <img id="img-logo-preview" src="" style="width:50px; height:50px; border-radius:12px; object-fit:cover; border:2px solid #f59e0b; display:none;">
+                <span style="font-size:0.78rem; color:#94a3b8;">Pré-visualização do Logo</span>
+              </div>
             </div>
 
             <div class="form-group">
-              <label id="lbl-item-cat">Categoria / Tipo</label>
-              <input type="text" id="new-cat" class="form-control">
+              <label>URL da Imagem de Capa do Topo (Banner)</label>
+              <input type="text" id="field-capa" class="form-control">
             </div>
 
             <div class="form-group">
-              <label id="lbl-item-price">Preço / Condição</label>
-              <input type="text" id="new-price" class="form-control">
+              <label>Cor Destaque do Tema (Seletor Personalizado)</label>
+              <div style="display:flex; align-items:center; gap:10px;">
+                <input type="color" id="field-corTema" value="#f59e0b" style="width:48px; height:44px; border:none; background:transparent; cursor:pointer;" onchange="setThemeColor(this.value)">
+                <input type="text" id="field-corTema-hex" value="#f59e0b" class="form-control" style="flex:1;" readonly>
+              </div>
+              <div class="color-swatches">
+                <div class="swatch-btn active" style="background:#f59e0b;" title="Dourado / Âmbar" onclick="setThemeColor('#f59e0b')"></div>
+                <div class="swatch-btn" style="background:#10b981;" title="Verde Esmeralda" onclick="setThemeColor('#10b981')"></div>
+                <div class="swatch-btn" style="background:#38bdf8;" title="Azul Safira" onclick="setThemeColor('#38bdf8')"></div>
+                <div class="swatch-btn" style="background:#ef4444;" title="Vermelho Rubi" onclick="setThemeColor('#ef4444')"></div>
+                <div class="swatch-btn" style="background:#a855f7;" title="Roxo Ametista" onclick="setThemeColor('#a855f7')"></div>
+                <div class="swatch-btn" style="background:#ec4899;" title="Rosa Glamour" onclick="setThemeColor('#ec4899')"></div>
+              </div>
             </div>
-
-            <div class="form-group">
-              <label id="lbl-item-img">URL da Foto (Google Drive ou Web)</label>
-              <input type="text" id="new-img" class="form-control">
-            </div>
           </div>
-
-          <div class="form-group">
-            <label><i class="fa-brands fa-youtube" style="color:#ef4444"></i> Link de Vídeo / Tour Virtual (Opcional)</label>
-            <input type="text" id="new-video" class="form-control">
-          </div>
-
-          <div class="form-group">
-            <label id="lbl-item-desc">Ficha Técnica & Descrição</label>
-            <textarea id="new-desc" rows="3" class="form-control"></textarea>
-          </div>
-
-          <button type="button" onclick="addCatalogItem()" style="background:linear-gradient(135deg, #f59e0b, #d97706); color:#fff; border:none; padding:12px 22px; border-radius:12px; font-weight:800; cursor:pointer; font-size:0.95rem;">
-            + Inserir Item no Catálogo
-          </button>
         </div>
+
+        <!-- 3. REDES SOCIAIS -->
+        <div class="card-section">
+          <div class="sec-header"><i class="fa-solid fa-share-nodes" style="color:#a855f7"></i> Redes Sociais</div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label><i class="fa-brands fa-instagram" style="color:#e1306c"></i> Link do Instagram</label>
+              <input type="text" id="field-instagram" class="form-control">
+            </div>
+
+            <div class="form-group">
+              <label><i class="fa-brands fa-youtube" style="color:#ef4444"></i> Link do YouTube</label>
+              <input type="text" id="field-youtube" class="form-control">
+            </div>
+
+            <div class="form-group">
+              <label><i class="fa-brands fa-facebook" style="color:#1877f2"></i> Link do Facebook</label>
+              <input type="text" id="field-facebook" class="form-control">
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. CATÁLOGO DE PRODUTOS / SERVIÇOS -->
+        <div class="card-section">
+          <div class="sec-header"><i class="fa-solid fa-boxes-stacked" style="color:#38bdf8"></i> Gerenciador do Catálogo de Itens</div>
+          
+          <div id="catalog-container" class="catalog-list"></div>
+
+          <div style="background:rgba(255,255,255,0.03); border:1px dashed rgba(255,255,255,0.15); padding:20px; border-radius:16px;">
+            <h4 style="font-size:0.95rem; margin-bottom:14px; color:#fbbf24;">
+              <i class="fa-solid fa-plus-circle"></i> Adicionar Item / Produto
+            </h4>
+            
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Título do Item / Imóvel / Serviço</label>
+                <input type="text" id="new-title" placeholder="ex: Apartamento de Luxo Vista Mar (Ref: PRO-101)" class="form-control">
+              </div>
+
+              <div class="form-group">
+                <label>Categoria</label>
+                <input type="text" id="new-cat" placeholder="ex: Apartamentos ou Serviços" class="form-control">
+              </div>
+
+              <div class="form-group">
+                <label>Preço / Valor</label>
+                <input type="text" id="new-price" placeholder="ex: Venda: R$ 2.450.000 ou R$ 130,00" class="form-control">
+              </div>
+
+              <div class="form-group">
+                <label>URL da Foto (Google Drive ou Web)</label>
+                <input type="text" id="new-img" placeholder="ex: Cole o link da foto" class="form-control">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label><i class="fa-brands fa-youtube" style="color:#ef4444"></i> Link do Vídeo / Tour Virtual (Opcional)</label>
+              <input type="text" id="new-video" placeholder="https://youtube.com/..." class="form-control">
+            </div>
+
+            <div class="form-group">
+              <label>Descrição Detalhada / Ficha Técnica</label>
+              <textarea id="new-desc" rows="3" placeholder="Ficha técnica, diferenciais e detalhes do item..." class="form-control"></textarea>
+            </div>
+
+            <button type="button" onclick="addCatalogItem()" style="background:linear-gradient(135deg, #10b981, #059669); color:#fff; border:none; padding:12px 22px; border-radius:12px; font-weight:800; cursor:pointer; font-size:0.95rem;">
+              + Adicionar Item ao Catálogo
+            </button>
+          </div>
+        </div>
+
+        <button type="button" onclick="saveChanges()" class="btn-action" style="padding:18px; font-size:1.1rem;">
+          <i class="fa-solid fa-cloud-arrow-up"></i> Salvar e Simular Publicação em Nuvem
+        </button>
       </div>
 
-      <button type="submit" class="btn-action" style="padding:18px; font-size:1.1rem;">
-        <i class="fa-solid fa-cloud-arrow-up"></i> Salvar e Publicar no GitHub Pages
-      </button>
-    </form>
+      <!-- LADO DIREITO: SIMULADOR AO VIVO EM TEMPO REAL -->
+      <div class="preview-sticky">
+        <h4 style="font-family:'Outfit',sans-serif; font-size:1.1rem; color:#fff; margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+          <i class="fa-solid fa-mobile-screen-button" style="color:#38bdf8"></i> Simulador Visual ao Vivo
+        </h4>
+        <div class="preview-frame-box">
+          <iframe id="previewIframe" class="preview-iframe" src="about:blank"></iframe>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script>
-    let currentSlug = '';
-    let currentStore = null;
+    let currentSlug = 'pro-imobiliaria';
+    let currentStore = {};
     let catalog = [];
 
-    const DEMO_SLUGS = ['basico-chaveiro', 'master-salao', 'carol-imoveis', 'pro-hamburgueria'];
-
-    function parseDriveUrl(url) {
-      if (!url) return '';
-      if (url.includes('drive.google.com') && url.includes('id=')) return url;
-      if (url.includes('drive.google.com/file/d/')) {
-        const parts = url.split('/file/d/');
-        if (parts[1]) {
-          const fileId = parts[1].split('/')[0];
-          return 'https://drive.google.com/uc?export=view&id=' + fileId;
-        }
-      }
-      return url;
-    }
-
-    function convertInputDriveUrl(input) {
-      if (input && input.value) {
-        input.value = parseDriveUrl(input.value);
-      }
-    }
-
     function onSelectSlugChange(select) {
-      document.getElementById('group-custom-slug').style.display = (select.value === 'custom') ? 'block' : 'none';
+      const customGroup = document.getElementById('group-custom-slug');
+      if (select.value === 'custom') {
+        customGroup.style.display = 'block';
+      } else {
+        customGroup.style.display = 'none';
+      }
     }
 
     async function login() {
-      const selectVal = document.getElementById('login-slug-select').value;
-      const customVal = document.getElementById('login-slug-custom').value.trim();
-      currentSlug = (selectVal === 'custom') ? customVal : selectVal;
+      const select = document.getElementById('login-slug-select');
+      if (select.value === 'custom') {
+        currentSlug = document.getElementById('login-slug-custom').value.trim();
+      } else {
+        currentSlug = select.value;
+      }
 
       if (!currentSlug) {
-        alert('Selecione ou digite o identificador (slug) da empresa!');
+        alert('Selecione ou digite a empresa!');
         return;
       }
 
-      // Fetch store data from GitHub Pages / API
-      try {
-        const res = await fetch(`https://raw.githubusercontent.com/hodrichtech/${currentSlug}/main/data.json?t=${Date.now()}`);
-        if (res.ok) {
-          currentStore = await res.json();
-        } else {
-          // Fallback demo store definitions if data.json doesn't exist yet
-          currentStore = getDemoFallbackStore(currentSlug);
-        }
-      } catch (e) {
-        currentStore = getDemoFallbackStore(currentSlug);
-      }
-
+      // Load fallback demo store definitions
+      currentStore = getDemoFallbackStore(currentSlug);
       setupEditorView();
     }
 
     function getDemoFallbackStore(slug) {
-      if (slug === 'carol-imoveis') {
-        return {
-          slug: 'carol-imoveis', plano: 'pro', nome: 'Carolina Silveira — Imóveis & Consultoria',
-          nicho: 'Corretora de Imóveis', cidade: 'Santos, Guarujá & Riviera',
-          whatsapp: '5513996351877', pix: '13996351877', instagram: 'carolina.imoveis',
-          youtube: '@carolinaimoveis', facebook: 'carolinaimoveissantos',
-          foto: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=300',
-          capa: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800',
-          descricao: 'Catálogo digital de apartamentos de alto padrão, casas em condomínio e lançamentos.',
+      const fallbacks = {
+        'basico-chaveiro': {
+          slug: 'basico-chaveiro', plano: 'basico', nome: 'Chaveiro Express 24h (Demonstrativo)',
+          nicho: 'Chaveiro Residencial & Automotivo', cidade: 'Santos e São Vicente - SP',
+          whatsapp: '5513996351877', instagram: 'chaveiroexpress24h_demo',
+          mapsUrl: 'https://www.google.com/maps?q=Santos+SP',
+          foto: 'https://images.unsplash.com/photo-1584438784894-089d6a62b8fa?w=300',
+          capa: 'https://images.unsplash.com/photo-1558002038-1055907df827?w=800',
+          descricao: 'Abertura de portas residenciais e veiculares, confecção de chaves codificadas e troca de segredo de fechaduras. Atendimento rápido!',
+          catalogo: []
+        },
+        'basico-guincho': {
+          slug: 'basico-guincho', plano: 'basico', nome: 'Guincho & Socorro 24h (Demonstrativo)',
+          nicho: 'Auto Socorro, Reboque & Carga de Bateria', cidade: 'São Paulo & Grande SP',
+          whatsapp: '5513996351877', instagram: 'guinchosocorro24h_demo',
+          mapsUrl: 'https://www.google.com/maps?q=Sao+Paulo+SP',
+          foto: 'https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=300',
+          capa: 'https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=800',
+          descricao: 'Atendimento emergencial de guincho plataforma para carros, motos e utilitários. Carga rápida de bateria no local.',
+          catalogo: []
+        },
+        'master-salao': {
+          slug: 'master-salao', plano: 'master', nome: 'Studio Beauty & Hair (Demonstrativo)',
+          nicho: 'Salão de Beleza & Estética', cidade: 'São Paulo - SP (Vila Madalena)',
+          whatsapp: '5513996351877', pix: '13996351877', instagram: 'studiobeauty_demo',
+          mapsUrl: 'https://www.google.com/maps?q=Sao+Paulo+SP',
+          foto: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=300',
+          capa: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800',
+          descricao: 'Especialista em Alongamento em Gel, Esmaltação em Gel, Escova Modeladora e Maquiagem Social.',
           catalogo: [
-            { id: '1', title: 'Apartamento Vista Mar 3 Suítes — Gonzaga', categoria: 'Apartamentos', priceStr: 'Venda: R$ 1.450.000', image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=200', desc: '180m² úteis, varanda gourmet envidraçada, 3 suítes, 2 vagas. Cód: AB-8840' }
+            { id: '1', title: 'Alongamento de Unhas em Gel Premium', categoria: 'Unhas', priceStr: 'R$ 130,00', image: 'https://images.unsplash.com/photo-1604654894610-df63bc536371?w=200', desc: 'Técnica duradoura com acabamento natural e cutilagem russa.' }
           ]
-        };
-      } else if (slug === 'pro-hamburgueria') {
-        return {
-          slug: 'pro-hamburgueria', plano: 'ecommerce', nome: 'Burger House Artesanal',
-          nicho: 'Hamburgueria & Gastronomia', cidade: 'Campinas - SP (Cambuí)',
-          whatsapp: '5513996351877', pix: '13996351877', instagram: 'burgerhouse.artesanal',
+        },
+        'master-mecanica': {
+          slug: 'master-mecanica', plano: 'master', nome: 'Auto Center & Mecânica (Demonstrativo)',
+          nicho: 'Oficina Mecânica & Estética Automotiva', cidade: 'Campinas - SP',
+          whatsapp: '5513996351877', pix: '13996351877', instagram: 'autocentermecanica_demo',
+          mapsUrl: 'https://www.google.com/maps?q=Campinas+SP',
+          foto: 'https://images.unsplash.com/photo-1486006920555-c77dce18193b?w=300',
+          capa: 'https://images.unsplash.com/photo-1617814076367-b759c7d7e738?w=800',
+          descricao: 'Injeção eletrônica, revisão preventiva, alinhamento 3D, freios e suspensão com transparência.',
+          catalogo: [
+            { id: '1', title: 'Revisão Preventiva Geral (40 Itens)', categoria: 'Serviços', priceStr: 'R$ 250,00', image: 'https://images.unsplash.com/photo-1486006920555-c77dce18193b?w=200', desc: 'Check-up completo computadorizado de injeção e suspensão.' }
+          ]
+        },
+        'master-marcenaria': {
+          slug: 'master-marcenaria', plano: 'master', nome: 'Marcenaria & Design (Demonstrativo)',
+          nicho: 'Móveis Planejados & Interiores Sob Medida', cidade: 'Curitiba - PR',
+          whatsapp: '5513996351877', pix: '13996351877', instagram: 'marcenariadesign_demo',
+          mapsUrl: 'https://www.google.com/maps?q=Curitiba+PR',
+          foto: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=300',
+          capa: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=800',
+          descricao: 'Projetos sob medida em MDF 100% naval para cozinhas, dormitórios, painéis de TV e escritórios corporativos.',
+          catalogo: [
+            { id: '1', title: 'Cozinha Planejada Minimalista MDF', categoria: 'Cozinhas', priceStr: 'Sob Consulta', image: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=200', desc: 'Armários aéreos com amortecimento e balcão em ilha.' }
+          ]
+        },
+        'master-solarenergia': {
+          slug: 'master-solarenergia', plano: 'master', nome: 'Solar Tech — Energia Solar (Demonstrativo)',
+          nicho: 'Engenharia Solar & Refrigeração Comercial', cidade: 'Ribeirão Preto - SP',
+          whatsapp: '5513996351877', pix: '13996351877', instagram: 'solartech_demo',
+          mapsUrl: 'https://www.google.com/maps?q=Ribeirao+Preto+SP',
+          foto: 'https://images.unsplash.com/photo-1509391365360-2e959784a276?w=300',
+          capa: 'https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?w=800',
+          descricao: 'Projetos de energia fotovoltaica para residências e comércios. Reduza até 95% da conta de luz.',
+          catalogo: [
+            { id: '1', title: 'Sistema Fotovoltaico Residencial (300 kWh/mês)', categoria: 'Kits Fotovoltaicos', priceStr: 'Sob Orçamento', image: 'https://images.unsplash.com/photo-1509391365360-2e959784a276?w=200', desc: 'Kit completo com 6 painéis de alta eficiência e inversor homologado.' }
+          ]
+        },
+        'pro-imobiliaria': {
+          slug: 'pro-imobiliaria', plano: 'pro', nome: 'Prime Imóveis & Consultoria (Demonstrativo Fictício)',
+          nicho: 'Consultoria Imobiliária & Gestão de Carteira', cidade: 'Região Metropolitana & Litoral',
+          whatsapp: '5513996351877', pix: '13996351877', instagram: 'primeimoveis_demo',
+          mapsUrl: 'https://www.google.com/maps?q=Regiao+Metropolitana+SP',
+          foto: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=300',
+          capa: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800',
+          descricao: 'Catálogo demonstrativo de lançamentos de alto padrão e consultoria técnica especializada para investidores.',
+          catalogo: [
+            { id: '1', title: 'Esplêndido Apartamento de Alto Padrão (Ref: PRO-101)', categoria: 'Apartamentos', priceStr: 'Venda: R$ 2.450.000', image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=200', desc: 'Residência suspensa de 220m² de área privativa, automatizada, 4 suítes, varanda gourmet panorâmica e 3 vagas.' },
+            { id: '2', title: 'Mansão Contemporânea em Condomínio Fechado (Ref: PRO-102)', categoria: 'Casas em Condomínio', priceStr: 'Venda: R$ 5.900.000', image: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=200', desc: 'Projeto neoclássico de 580m² com 5 suítes máster, piscina com borda infinita e adega.' }
+          ]
+        },
+        'pro-clinica': {
+          slug: 'pro-clinica', plano: 'pro', nome: 'Odonto & Estética Avançada (Demonstrativo)',
+          nicho: 'Odontologia & Harmonização Facial', cidade: 'Belo Horizonte - MG',
+          whatsapp: '5513996351877', pix: '13996351877', instagram: 'odontoestetica_demo',
+          mapsUrl: 'https://www.google.com/maps?q=Belo+Horizonte+MG',
+          foto: 'https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=300',
+          capa: 'https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?w=800',
+          descricao: 'Facetas em resina compostas, alinhadores invisíveis, clareamento a laser e harmonização orofacial.',
+          catalogo: [
+            { id: '1', title: 'Lentes de Contato Dental / Facetas em Resina', categoria: 'Estética Dental', priceStr: 'Sob Avaliação', image: 'https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=200', desc: 'Transformação do sorriso em sessão única com escaneamento intraoral 3D.' }
+          ]
+        },
+        'pro-petshop': {
+          slug: 'pro-petshop', plano: 'pro', nome: 'Pet Care & Veterinária (Demonstrativo)',
+          nicho: 'Pet Shop, Banho & Tosa e Leva & Traz', cidade: 'Florianópolis - SC',
+          whatsapp: '5513996351877', pix: '13996351877', instagram: 'petcarevet_demo',
+          mapsUrl: 'https://www.google.com/maps?q=Florianopolis+SC',
+          foto: 'https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?w=300',
+          capa: 'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=800',
+          descricao: 'Banho e tosa profissional com ozonioterapia, consultas veterinárias e táxi pet com busca residencial.',
+          catalogo: [
+            { id: '1', title: 'Banho & Tosa Completo + Hidratação de Pelagem', categoria: 'Banho & Tosa', priceStr: 'R$ 90,00', image: 'https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?w=200', desc: 'Corte de unhas, limpeza de ouvidos e shampoo hipoalergênico.' }
+          ]
+        },
+        'pro-hamburgueria': {
+          slug: 'pro-hamburgueria', plano: 'ecommerce', nome: 'Burger House Artesanal (Demonstrativo)',
+          nicho: 'Hamburgueria & Gastronomia Premium', cidade: 'Campinas - SP (Cambuí)',
+          whatsapp: '5513996351877', pix: '13996351877', instagram: 'burgerhouse_demo',
+          mapsUrl: 'https://www.google.com/maps?q=Campinas+SP',
           foto: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=300',
           capa: 'https://images.unsplash.com/photo-1550547660-d9450f859349?w=800',
           descricao: 'Hambúrgueres de carne fresca 100% Angus assados no fogo, queijo derretido e molhos artesanais.',
           catalogo: [
             { id: '1', title: 'Smash Cheese Bacon', categoria: 'Burgers Smash', priceStr: 'R$ 34,90', image: 'https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=200', desc: '2x ultra smash burgers 90g, queijo cheddar derretido e bacon crocante.' }
           ]
-        };
-      } else if (slug === 'master-salao') {
-        return {
-          slug: 'master-salao', plano: 'master', nome: 'Studio Maria — Nail & Hair',
-          nicho: 'Salão de Beleza & Estética', cidade: 'São Paulo - SP',
-          whatsapp: '5513996351877', pix: '13996351877', instagram: 'studiomaria.beauty',
-          foto: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=300',
-          capa: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800',
-          descricao: 'Especialista em Alongamento em Gel, Esmaltação em Gel e Escova Modeladora.',
-          catalogo: [
-            { id: '1', title: 'Alongamento de Unhas em Gel Premium', categoria: 'Unhas', priceStr: 'R$ 130,00', image: 'https://images.unsplash.com/photo-1604654894610-df63bc536371?w=200', desc: 'Técnica duradoura com acabamento natural e cutilagem russa.' }
-          ]
-        };
-      } else {
-        return {
-          slug: 'basico-chaveiro', plano: 'basico', nome: 'Marcos Chaveiro 24h',
-          nicho: 'Chaveiro & Segurança Residencial', cidade: 'Baixada Santista',
-          whatsapp: '5513996351877', instagram: 'marcoschaveiro24h',
-          foto: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=300',
-          capa: 'https://images.unsplash.com/photo-1558002038-1055907df827?w=800',
-          descricao: 'Serviços de chaveiro residencial, comercial e automotivo. Atendimento rápido!',
-          catalogo: [
-            { id: '1', title: 'Abertura de Portas & Fechaduras Codificadas', categoria: 'Emergencial', priceStr: 'A partir de R$ 80,00', image: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=200', desc: 'Atendimento móvel com chegada em até 20 minutos.' }
-          ]
-        };
-      }
+        }
+      };
+
+      return fallbacks[slug] || fallbacks['pro-imobiliaria'];
     }
 
     function setupEditorView() {
@@ -373,6 +474,7 @@
       document.getElementById('field-whatsapp').value = currentStore.whatsapp || '';
       document.getElementById('field-pix').value = currentStore.pix || '';
       document.getElementById('field-horarios').value = currentStore.horarios || '';
+      document.getElementById('field-mapsUrl').value = currentStore.mapsUrl || 'https://www.google.com/maps?q=Regiao+Metropolitana+SP';
       document.getElementById('field-descricao').value = currentStore.descricao || '';
       document.getElementById('field-instagram').value = currentStore.instagram || '';
       document.getElementById('field-youtube').value = currentStore.youtube || '';
@@ -380,8 +482,46 @@
       document.getElementById('field-foto').value = currentStore.foto || '';
       document.getElementById('field-capa').value = currentStore.capa || '';
 
+      previewLogo(currentStore.foto);
+
       catalog = currentStore.catalogo || [];
       renderCatalog();
+      updateLiveSimulator();
+    }
+
+    function previewLogo(url) {
+      const img = document.getElementById('img-logo-preview');
+      if (url) {
+        img.src = parseDriveUrl(url);
+        img.style.display = 'inline-block';
+      } else {
+        img.style.display = 'none';
+      }
+    }
+
+    function setThemeColor(hex) {
+      document.getElementById('field-corTema').value = hex;
+      document.getElementById('field-corTema-hex').value = hex;
+      document.querySelectorAll('.swatch-btn').forEach(btn => {
+        if (btn.style.backgroundColor === hex || btn.getAttribute('onclick').includes(hex)) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+    }
+
+    function updateLiveSimulator() {
+      const iframe = document.getElementById('previewIframe');
+      iframe.src = `https://hodrichtech.github.io/${currentSlug}/`;
+    }
+
+    function parseDriveUrl(url) {
+      if (!url) return '';
+      if (url.includes('drive.google.com') && url.includes('id=')) {
+        return url;
+      }
+      return url;
     }
 
     function renderCatalog() {
@@ -391,7 +531,7 @@
         return;
       }
       container.innerHTML = catalog.map(function(item, idx) {
-        var img = parseDriveUrl(item.image) || 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=100';
+        var img = parseDriveUrl(item.image) || 'https://images.unsplash.com/photo-1584438784894-089d6a62b8fa?w=100';
         var price = item.priceStr || (item.price ? ('R$ ' + item.price) : 'Sob Consulta');
         var videoLink = item.video ? '<div class="item-video"><i class="fa-brands fa-youtube"></i> Com Vídeo</div>' : '';
 
@@ -423,7 +563,7 @@
         title,
         categoria: cat,
         priceStr: priceStr || 'Sob Consulta',
-        image: parseDriveUrl(rawImg) || 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=200',
+        image: parseDriveUrl(rawImg) || 'https://images.unsplash.com/photo-1584438784894-089d6a62b8fa?w=200',
         video: video || '',
         desc
       });
@@ -450,9 +590,9 @@
       banner.innerHTML = `
         <i class="fa-solid fa-circle-check fa-lg"></i>
         <div>
-          <b>Alterações Salvas no GitHub Pages com Sucesso!</b><br>
-          Seu site está no ar com 100% de disponibilidade em: 
-          <a href="${liveUrl}" target="_blank" style="color:#38bdf8; font-weight:700; text-decoration:underline;">${liveUrl}</a>
+          <b>🧪 Simulação do Painel Concluída com Sucesso!</b><br>
+          Você testou a alteração do formulário, paleta de cores e catálogo.<br> 
+          Em uma conta real contratada, suas alterações são salvas e publicadas em nuvem no seu subdomínio em 5 segundos!
         </div>
       `;
 
