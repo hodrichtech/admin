@@ -250,6 +250,80 @@
             </div>
           </div>
 
+                    <div class="sec-header"><i class="fa-solid fa-wand-magic-sparkles" style="color:#f59e0b"></i> 🎨 Construtor Visual & Personalização Máxima (No-Code)</div>
+          
+          <div class="form-grid">
+            <!-- FONTE TIPOGRAFICA -->
+            <div class="form-group">
+              <label><i class="fa-solid fa-font"></i> Fonte Tipográfica da Vitrine</label>
+              <select id="field-fonte" class="form-control" onchange="applyCustomFont(this.value)">
+                <option value="Outfit">Outfit (Moderno & Tech)</option>
+                <option value="Inter" selected>Inter (Executivo Clean)</option>
+                <option value="Poppins">Poppins (Vibrante & Arredondado)</option>
+                <option value="Roboto">Roboto (Padrão & Alta Legibilidade)</option>
+                <option value="Playfair Display">Playfair Display (Luxo & Elegante)</option>
+              </select>
+            </div>
+
+            <!-- MODO DE FUNDO -->
+            <div class="form-group">
+              <label><i class="fa-solid fa-circle-half-stroke"></i> Modo de Fundo do Site</label>
+              <select id="field-bgMode" class="form-control" onchange="applyBgMode(this.value)">
+                <option value="theme-dark" selected>🌙 Noturno Obsidian (Escuro)</option>
+                <option value="theme-light">☀️ Claro Minimalista (Branco)</option>
+                <option value="theme-vibrant">⚡ Vibrante High-Contrast</option>
+              </select>
+            </div>
+
+            <!-- IMAGEM DE FUNDO CUSTOMIZADA -->
+            <div class="form-group" style="grid-column: 1 / -1;">
+              <label><i class="fa-solid fa-image"></i> Imagem / Textura de Fundo Customizada (Opcional)</label>
+              <div style="display:flex; gap:10px; align-items:center;">
+                <input type="text" id="field-bgImage" placeholder="https://exemplo.com/textura-fundo.jpg" class="form-control" style="flex:1;" oninput="applyBgImage(this.value)">
+                <button type="button" onclick="toggleBgImage()" class="btn-action" style="width:auto; padding:10px 16px; margin:0; font-size:0.8rem; background:#374151;">🖼️ Alternar Fundo</button>
+              </div>
+            </div>
+
+            <!-- REORDENACAO DE SECOES DA VITRINE -->
+            <div class="form-group" style="grid-column: 1 / -1;">
+              <label style="color:#fbbf24; font-weight:800; margin-bottom:8px; display:block;"><i class="fa-solid fa-arrows-up-down"></i> 🧱 Reordenar Seções da Vitrine (Arraste ou Clique para Mover)</label>
+              <div id="section-reorder-list" style="display:grid; gap:8px;">
+                <div class="sec-item" style="background:#1e293b; border:1px solid rgba(255,255,255,0.1); padding:10px 14px; border-radius:10px; display:flex; align-items:center; justify-content:space-between;">
+                  <span>🏪 1. Banner, Logo & Apresentação Principal</span>
+                  <span style="font-size:0.75rem; color:#94a3b8;">Fixado no Topo</span>
+                </div>
+                <div class="sec-item" style="background:#1e293b; border:1px solid rgba(255,255,255,0.1); padding:10px 14px; border-radius:10px; display:flex; align-items:center; justify-content:space-between;">
+                  <span>📦 2. Catálogo de Produtos & Serviços</span>
+                  <div>
+                    <button type="button" onclick="moveSection('catalog', 'up')" style="background:#334155; border:none; color:#fff; padding:4px 8px; border-radius:4px; cursor:pointer;">⬆</button>
+                    <button type="button" onclick="moveSection('catalog', 'down')" style="background:#334155; border:none; color:#fff; padding:4px 8px; border-radius:4px; cursor:pointer;">⬇</button>
+                  </div>
+                </div>
+                <div class="sec-item" style="background:#1e293b; border:1px solid rgba(255,255,255,0.1); padding:10px 14px; border-radius:10px; display:flex; align-items:center; justify-content:space-between;">
+                  <span>🖼️ 3. Galeria de Trabalhos & Fotos</span>
+                  <div>
+                    <button type="button" onclick="moveSection('gallery', 'up')" style="background:#334155; border:none; color:#fff; padding:4px 8px; border-radius:4px; cursor:pointer;">⬆</button>
+                    <button type="button" onclick="moveSection('gallery', 'down')" style="background:#334155; border:none; color:#fff; padding:4px 8px; border-radius:4px; cursor:pointer;">⬇</button>
+                  </div>
+                </div>
+                <div class="sec-item" style="background:#1e293b; border:1px solid rgba(255,255,255,0.1); padding:10px 14px; border-radius:10px; display:flex; align-items:center; justify-content:space-between;">
+                  <span>⭐ 4. Depoimentos de Clientes</span>
+                  <div>
+                    <button type="button" onclick="moveSection('reviews', 'up')" style="background:#334155; border:none; color:#fff; padding:4px 8px; border-radius:4px; cursor:pointer;">⬆</button>
+                    <button type="button" onclick="moveSection('reviews', 'down')" style="background:#334155; border:none; color:#fff; padding:4px 8px; border-radius:4px; cursor:pointer;">⬇</button>
+                  </div>
+                </div>
+                <div class="sec-item" style="background:#1e293b; border:1px solid rgba(255,255,255,0.1); padding:10px 14px; border-radius:10px; display:flex; align-items:center; justify-content:space-between;">
+                  <span>📍 5. Informações & Localização Google Maps</span>
+                  <div>
+                    <button type="button" onclick="moveSection('location', 'up')" style="background:#334155; border:none; color:#fff; padding:4px 8px; border-radius:4px; cursor:pointer;">⬆</button>
+                    <button type="button" onclick="moveSection('location', 'down')" style="background:#334155; border:none; color:#fff; padding:4px 8px; border-radius:4px; cursor:pointer;">⬇</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div class="sec-header"><i class="fa-solid fa-share-nodes" style="color:#a855f7"></i> Redes Sociais</div>
           <div class="form-grid">
             <div class="form-group">
@@ -630,6 +704,62 @@
         b.style.fontFamily = cfg.font + ', sans-serif';
       }
     }
+
+
+function applyCustomFont(fontName) {
+  var iframe = document.getElementById('iframe-live-preview') || document.getElementById('previewFrame');
+  if (iframe && iframe.contentDocument && iframe.contentDocument.body) {
+    iframe.contentDocument.body.style.fontFamily = fontName + ', sans-serif';
+  }
+}
+
+function applyBgMode(modeClass) {
+  var iframe = document.getElementById('iframe-live-preview') || document.getElementById('previewFrame');
+  if (iframe && iframe.contentDocument && iframe.contentDocument.body) {
+    var b = iframe.contentDocument.body;
+    b.classList.remove('theme-dark', 'theme-light', 'theme-vibrant');
+    b.classList.add(modeClass);
+  }
+}
+
+function applyBgImage(url) {
+  var iframe = document.getElementById('iframe-live-preview') || document.getElementById('previewFrame');
+  if (iframe && iframe.contentDocument && iframe.contentDocument.body) {
+    var b = iframe.contentDocument.body;
+    if (url && url.trim()) {
+      b.style.backgroundImage = 'url(' + url.trim() + ')';
+      b.style.backgroundSize = 'cover';
+      b.style.backgroundAttachment = 'fixed';
+    } else {
+      b.style.backgroundImage = 'none';
+    }
+  }
+}
+
+function toggleBgImage() {
+  var input = document.getElementById('field-bgImage');
+  if (!input) return;
+  if (input.value) {
+    input.value = '';
+    applyBgImage('');
+  } else {
+    input.value = 'https://images.unsplash.com/photo-1557683316-973673baf926?w=1200';
+    applyBgImage(input.value);
+  }
+}
+
+function moveSection(secId, dir) {
+  var iframe = document.getElementById('iframe-live-preview') || document.getElementById('previewFrame');
+  if (!iframe || !iframe.contentDocument) return;
+  var doc = iframe.contentDocument;
+  var target = doc.getElementById('sec-' + secId) || doc.querySelector('.' + secId + '-section');
+  if (!target || !target.parentNode) return;
+  if (dir === 'up' && target.previousElementSibling) {
+    target.parentNode.insertBefore(target, target.previousElementSibling);
+  } else if (dir === 'down' && target.nextElementSibling) {
+    target.parentNode.insertBefore(target.nextElementSibling, target);
+  }
+}
 
 function setThemeColor(hex) {
       document.getElementById('field-corTema').value = hex;
