@@ -215,13 +215,37 @@
                 <input type="text" id="field-corTema-hex" value="#f59e0b" class="form-control" style="width:120px; font-weight:800; font-family:monospace;" readonly>
               </div>
 
-              <div style="font-size:0.78rem; font-weight:800; color:#fbbf24; margin-bottom:6px;"><i class="fa-solid fa-wand-magic-sparkles"></i> Paletas de Cores Prontas (1-Clique)</div>
-              <div style="display:flex; flex-wrap:wrap; gap:8px;">
-                <button type="button" onclick="setThemeColor('#6366f1')" style="background:#1e293b; border:1px solid #6366f1; color:#fff; padding:6px 12px; border-radius:6px; font-size:0.75rem; font-weight:700; cursor:pointer;">🌌 Dark Neon (#6366f1)</button>
-                <button type="button" onclick="setThemeColor('#0284c7')" style="background:#1e293b; border:1px solid #0284c7; color:#fff; padding:6px 12px; border-radius:6px; font-size:0.75rem; font-weight:700; cursor:pointer;">🌿 Minimal Clean (#0284c7)</button>
-                <button type="button" onclick="setThemeColor('#f59e0b')" style="background:#1e293b; border:1px solid #f59e0b; color:#fff; padding:6px 12px; border-radius:6px; font-size:0.75rem; font-weight:700; cursor:pointer;">👑 Gold Luxury (#f59e0b)</button>
-                <button type="button" onclick="setThemeColor('#ea580c')" style="background:#1e293b; border:1px solid #ea580c; color:#fff; padding:6px 12px; border-radius:6px; font-size:0.75rem; font-weight:700; cursor:pointer;">🍊 Warm Delivery (#ea580c)</button>
-                <button type="button" onclick="setThemeColor('#0d9488')" style="background:#1e293b; border:1px solid #0d9488; color:#fff; padding:6px 12px; border-radius:6px; font-size:0.75rem; font-weight:700; cursor:pointer;">🩺 Clinical Clean (#0d9488)</button>
+                            <div style="font-size:0.78rem; font-weight:800; color:#fbbf24; margin-bottom:8px;"><i class="fa-solid fa-wand-magic-sparkles"></i> Presets de Temas Prontos (Transformação Total do Layout em 1-Clique)</div>
+              <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap:10px;">
+                <button type="button" onclick="applyThemePreset('dark-neon')" style="background:#0f172a; border:2px solid #6366f1; color:#fff; padding:10px; border-radius:10px; font-size:0.78rem; font-weight:700; cursor:pointer; text-align:center;">
+                  <div style="height:10px; background:linear-gradient(90deg,#6366f1,#4f46e5); border-radius:4px; margin-bottom:6px;"></div>
+                  <strong>🌌 Dark Neon</strong>
+                  <div style="font-size:0.65rem; color:#94a3b8; margin-top:2px;">Fundo Escuro + Neon</div>
+                </button>
+
+                <button type="button" onclick="applyThemePreset('minimal-clean')" style="background:#0f172a; border:2px solid #0284c7; color:#fff; padding:10px; border-radius:10px; font-size:0.78rem; font-weight:700; cursor:pointer; text-align:center;">
+                  <div style="height:10px; background:linear-gradient(90deg,#0284c7,#38bdf8); border-radius:4px; margin-bottom:6px;"></div>
+                  <strong>🌿 Minimal Clean</strong>
+                  <div style="font-size:0.65rem; color:#94a3b8; margin-top:2px;">Fundo Branco Clean</div>
+                </button>
+
+                <button type="button" onclick="applyThemePreset('gold-luxury')" style="background:#0f172a; border:2px solid #f59e0b; color:#fff; padding:10px; border-radius:10px; font-size:0.78rem; font-weight:700; cursor:pointer; text-align:center;">
+                  <div style="height:10px; background:linear-gradient(90deg,#f59e0b,#d97706); border-radius:4px; margin-bottom:6px;"></div>
+                  <strong>👑 Gold Luxury</strong>
+                  <div style="font-size:0.65rem; color:#94a3b8; margin-top:2px;">Vidro & Glow Ouro</div>
+                </button>
+
+                <button type="button" onclick="applyThemePreset('warm-delivery')" style="background:#0f172a; border:2px solid #ea580c; color:#fff; padding:10px; border-radius:10px; font-size:0.78rem; font-weight:700; cursor:pointer; text-align:center;">
+                  <div style="height:10px; background:linear-gradient(90deg,#ea580c,#f97316); border-radius:4px; margin-bottom:6px;"></div>
+                  <strong>🍊 Warm Delivery</strong>
+                  <div style="font-size:0.65rem; color:#94a3b8; margin-top:2px;">Lista Cardápio iFood</div>
+                </button>
+
+                <button type="button" onclick="applyThemePreset('clinical-clean')" style="background:#0f172a; border:2px solid #0d9488; color:#fff; padding:10px; border-radius:10px; font-size:0.78rem; font-weight:700; cursor:pointer; text-align:center;">
+                  <div style="height:10px; background:linear-gradient(90deg,#0d9488,#14b8a6); border-radius:4px; margin-bottom:6px;"></div>
+                  <strong>🩺 Clinical Clean</strong>
+                  <div style="font-size:0.65rem; color:#94a3b8; margin-top:2px;">Organização Cirúrgica</div>
+                </button>
               </div>
             </div>
           </div>
@@ -582,6 +606,31 @@
     }
 
     function setLayoutStyle(styleKey) { const iframe = document.getElementById('iframe-live-preview'); if (!iframe || !iframe.contentDocument) return; const b = iframe.contentDocument.body; if (!b) return; b.classList.remove('layout-hero-grid', 'layout-compact-list', 'layout-glassmorphism'); b.classList.add('layout-' + styleKey); }
+
+    var PRESETS_CONFIG = {
+      'dark-neon': { hex: '#6366f1', theme: 'theme-dark', layout: 'layout-hero-grid', font: 'Outfit' },
+      'minimal-clean': { hex: '#0284c7', theme: 'theme-light', layout: 'layout-hero-grid', font: 'Inter' },
+      'gold-luxury': { hex: '#f59e0b', theme: 'theme-dark', layout: 'layout-glassmorphism', font: 'Outfit' },
+      'warm-delivery': { hex: '#ea580c', theme: 'theme-vibrant', layout: 'layout-compact-list', font: 'Poppins' },
+      'clinical-clean': { hex: '#0d9488', theme: 'theme-light', layout: 'layout-compact-list', font: 'Inter' }
+    };
+
+    function applyThemePreset(key) {
+      var cfg = PRESETS_CONFIG[key];
+      if (!cfg) return;
+      setThemeColor(cfg.hex);
+      
+      var iframe = document.getElementById('iframe-live-preview') || document.getElementById('previewFrame');
+      if (iframe && iframe.contentDocument && iframe.contentDocument.body) {
+        var b = iframe.contentDocument.body;
+        b.classList.remove('theme-dark', 'theme-light', 'theme-vibrant');
+        b.classList.add(cfg.theme);
+        b.classList.remove('layout-hero-grid', 'layout-compact-list', 'layout-glassmorphism');
+        b.classList.add(cfg.layout);
+        b.style.fontFamily = cfg.font + ', sans-serif';
+      }
+    }
+
 function setThemeColor(hex) {
       document.getElementById('field-corTema').value = hex;
       document.getElementById('field-corTema-hex').value = hex;
