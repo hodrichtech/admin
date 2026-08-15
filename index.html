@@ -295,6 +295,20 @@
               </div>
             </div>
 
+                        <!-- PATTERNS SVG DE FUNDO OPENSOURCE -->
+            <div class="form-group" style="grid-column: 1 / -1; margin-top: 10px;">
+              <label style="color:#fbbf24; font-weight:800; display:flex; align-items:center; gap:6px; margin-bottom:8px;">
+                <i class="fa-solid fa-border-all"></i> Texturas & Padrões SVG de Fundo (HeroPatterns Open-Source)
+              </label>
+              <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 8px;">
+                <button type="button" onclick="applySvgPattern('none')" style="background:#0f172a; border:1.5px solid rgba(255,255,255,0.2); border-radius:8px; padding:8px; color:#fff; cursor:pointer; font-size:0.7rem; font-weight:700;">🚫 Sem Textura</button>
+                <button type="button" onclick="applySvgPattern('grid')" style="background:#0f172a; border:1.5px solid #6366f1; border-radius:8px; padding:8px; color:#fff; cursor:pointer; font-size:0.7rem; font-weight:700;">📐 Malha Grid</button>
+                <button type="button" onclick="applySvgPattern('dots')" style="background:#0f172a; border:1.5px solid #0284c7; border-radius:8px; padding:8px; color:#fff; cursor:pointer; font-size:0.7rem; font-weight:700;">🔴 Pontilhado</button>
+                <button type="button" onclick="applySvgPattern('waves')" style="background:#0f172a; border:1.5px solid #ea580c; border-radius:8px; padding:8px; color:#fff; cursor:pointer; font-size:0.7rem; font-weight:700;">〰️ Ondas Abstratas</button>
+                <button type="button" onclick="applySvgPattern('hex')" style="background:#0f172a; border:1.5px solid #f59e0b; border-radius:8px; padding:8px; color:#fff; cursor:pointer; font-size:0.7rem; font-weight:700;">🔷 Hexágonos</button>
+              </div>
+            </div>
+
             <!-- REORDENACAO DE SECOES DA VITRINE -->
             <div class="form-group" style="grid-column: 1 / -1;">
               <label style="color:#fbbf24; font-weight:800; margin-bottom:8px; display:block;"><i class="fa-solid fa-arrows-up-down"></i> 🧱 Reordenar Seções da Vitrine (Arraste ou Clique para Mover)</label>
@@ -717,6 +731,18 @@
     }
 
 
+
+
+function applySvgPattern(patternKey) {
+  var iframe = document.getElementById('iframe-live-preview') || document.getElementById('previewFrame');
+  if (!iframe || !iframe.contentDocument) return;
+  var b = iframe.contentDocument.body;
+  if (!b) return;
+  b.classList.remove('pat-grid', 'pat-dots', 'pat-waves', 'pat-hex');
+  if (patternKey !== 'none') {
+    b.classList.add('pat-' + patternKey);
+  }
+}
 
 function applyButtonStyle(styleClass) {
   var iframe = document.getElementById('iframe-live-preview') || document.getElementById('previewFrame');
