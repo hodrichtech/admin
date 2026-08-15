@@ -287,7 +287,7 @@
           </div>
         </div>
 
-        <button type="button" onclick="saveChanges()" class="btn-action" style="padding:18px; font-size:1.1rem;">
+        <button type="button" id="btn-save-main" onclick="saveChanges()" class="btn-action" style="padding:18px; font-size:1.1rem;">
           <i class="fa-solid fa-cloud-arrow-up"></i> Salvar e Simular Publicação em Nuvem
         </button>
       </div>
@@ -488,6 +488,30 @@
       catalog = currentStore.catalogo || [];
       renderCatalog();
       updateLiveSimulator();
+
+      // Check if current store is a demo showcase
+      const isDemo = ['basico-chaveiro', 'basico-guincho', 'master-salao', 'master-mecanica', 'master-marcenaria', 'master-solarenergia', 'pro-imobiliaria', 'pro-clinica', 'pro-petshop', 'pro-hamburgueria'].includes(currentSlug);
+      const saveBtn = document.getElementById('btn-save-main');
+      if (isDemo) {
+        saveBtn.disabled = true;
+        saveBtn.style.background = 'rgba(239, 68, 68, 0.15)';
+        saveBtn.style.border = '1px solid #ef4444';
+        saveBtn.style.color = '#fca5a5';
+        saveBtn.style.cursor = 'not-allowed';
+        saveBtn.style.boxShadow = 'none';
+        saveBtn.innerHTML = '<i class="fa-solid fa-lock"></i> Salvar Bloqueado em Modelos Demonstrativos (Apenas Visualização)';
+        saveBtn.onclick = function() {
+          alert('🔒 AÇÃO BLOQUEADA: Os 10 modelos de demonstração são protegidos contra alteração direta. Para ter uma página comercial própria com salvamento e publicação em tempo real liberados, contrate um dos nossos planos!');
+        };
+      } else {
+        saveBtn.disabled = false;
+        saveBtn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+        saveBtn.style.border = 'none';
+        saveBtn.style.color = '#fff';
+        saveBtn.style.cursor = 'pointer';
+        saveBtn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> Salvar e Publicar em Nuvem';
+        saveBtn.onclick = saveChanges;
+      }
     }
 
     function previewLogo(url) {
