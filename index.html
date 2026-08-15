@@ -208,6 +208,17 @@
               <input type="text" id="field-capa" oninput="triggerLivePreview()" class="form-control">
             </div>
 
+                        <!-- ESTILO DOS BOTOES DA VITRINE -->
+            <div class="form-group">
+              <label><i class="fa-solid fa-square-check"></i> Estilo dos Botões da Vitrine</label>
+              <select id="field-btnStyle" class="form-control" onchange="applyButtonStyle(this.value)">
+                <option value="btn-pill" selected>💊 Pílula Arredondada (Arredondado 30px)</option>
+                <option value="btn-square">⬛ Quadrado Moderno (Canto Reto 6px)</option>
+                <option value="btn-neon">⚡ Neon Glow Cyberpunk (Efeito Neon 3D)</option>
+                <option value="btn-gradient">💎 Degradê Espelhado Luxo</option>
+              </select>
+            </div>
+
             <div class="form-group" style="grid-column: 1 / -1;">
               <label style="color:#f59e0b; font-weight:800; margin-bottom:8px; display:block;"><i class="fa-solid fa-palette"></i> Cor Destaque do Tema</label>
               <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
@@ -705,6 +716,16 @@
       }
     }
 
+
+
+function applyButtonStyle(styleClass) {
+  var iframe = document.getElementById('iframe-live-preview') || document.getElementById('previewFrame');
+  if (iframe && iframe.contentDocument && iframe.contentDocument.body) {
+    var b = iframe.contentDocument.body;
+    b.classList.remove('btn-pill', 'btn-square', 'btn-neon', 'btn-gradient');
+    b.classList.add(styleClass);
+  }
+}
 
 function applyCustomFont(fontName) {
   var iframe = document.getElementById('iframe-live-preview') || document.getElementById('previewFrame');
